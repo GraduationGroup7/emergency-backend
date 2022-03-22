@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+    postgres:
+        container_name: postgres_container
+        image: postgres:13.4
+        environment:
+            - LC_ALL=C.UTF-8
+            - POSTGRES_DB=${DB_DATABASE}
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - "${DB_PORT}:5432"
+        networks:
+            - postgres
+
+networks:
+    postgres:
+        driver: bridge
+
+volumes:
+    postgres:

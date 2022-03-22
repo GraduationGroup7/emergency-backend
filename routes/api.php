@@ -14,7 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('users', [\App\Http\Controllers\UserController::class, 'getUsers']);
+/**
+ * Authentication Routes
+ */
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
+});
 
 
 /**
@@ -24,4 +29,6 @@ Route::middleware('auth:sanctum')->group(function() {
    Route::get('/user', function (Request $request) {
        return $request->user();
    });
+
+    Route::get('users', [\App\Http\Controllers\UserController::class, 'getUsers']);
 });
