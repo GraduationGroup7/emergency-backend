@@ -28,3 +28,10 @@ if (!function_exists('res')) {
         );
     }
 }
+
+if(!function_exists('compareWithEnum')) {
+    function compareWithEnum($value, $enum): bool
+    {
+        return strtoupper($value) == $enum->name;
+    }
+}
