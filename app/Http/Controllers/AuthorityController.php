@@ -7,6 +7,8 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthorityController extends Controller
 {
@@ -63,5 +65,25 @@ class AuthorityController extends Controller
         }
 
         return Authority::query()->create($data);
+    }
+
+    public function deleteAuthority(int $id): JsonResponse
+    {
+        $authority = Authority::query()->find($id);
+        if (!$authority) {
+            return res('Authority not found', 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($authority->user_id);
+            $authority->delete();
+            $user->delete();
+
+            DB::commit();
+            return res('Authority deleted successfully');
+        } catch (Exception $e) {
+            return res($e->getMessage(), 400);
+        }
     }
 }
