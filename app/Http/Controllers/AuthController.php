@@ -80,6 +80,16 @@ class AuthController extends Controller
                 AuthorityController::createAuthority($payload);
             }
 
+            else if(compareWithEnum($request->type, UserTypeEnum::AGENT)) {
+                $payload = [
+                    'first_name' => $request->name,
+                    'last_name' => $request->name,
+                    'user_id' => $user->id,
+                ];
+
+                AgentController::createAgent($payload);
+            }
+
             DB::commit();
 
             return res([

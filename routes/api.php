@@ -47,4 +47,14 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/{id}', [\App\Http\Controllers\AuthorityController::class, 'updateAuthority']);
         Route::delete('/{id}', [\App\Http\Controllers\AuthorityController::class, 'deleteAuthority']);
     });
+
+    // create agents group
+    Route::group(['prefix' => 'agents'], function () {
+        Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgents']);
+        Route::get('/{id}', [\App\Http\Controllers\AgentController::class, 'getAgent']);
+        Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgent']);
+        Route::put('/{id}', [\App\Http\Controllers\AgentController::class, 'updateAgent']);
+        Route::delete('/{id}', [\App\Http\Controllers\AgentController::class, 'deleteAgent']);
+    });
 });
+
