@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
+    Route::post('register', [\App\Http\Controllers\AuthController::class, 'register']);
 });
 
 
@@ -38,5 +39,12 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/{id}', [\App\Http\Controllers\EmergencyTypeController::class, 'getEmergencyType']);
         Route::put('/{id}', [\App\Http\Controllers\EmergencyTypeController::class, 'updateEmergencyType']);
         Route::delete('/{id}', [\App\Http\Controllers\EmergencyTypeController::class, 'deleteEmergencyType']);
+    });
+
+    Route::group(['prefix' => 'authorities'], function () {
+        Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthorities']);
+        Route::get('/{id}', [\App\Http\Controllers\AuthorityController::class, 'getAuthority']);
+        Route::put('/{id}', [\App\Http\Controllers\AuthorityController::class, 'updateAuthority']);
+        Route::delete('/{id}', [\App\Http\Controllers\AuthorityController::class, 'deleteAuthority']);
     });
 });
