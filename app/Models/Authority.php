@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,4 +15,9 @@ class Authority extends Model
         'last_name',
     ];
     use HasFactory;
+
+    public function user(): Model|Collection|Builder|array|null
+    {
+        return User::query()->find($this->user_id);
+    }
 }
