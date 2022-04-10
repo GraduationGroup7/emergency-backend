@@ -72,6 +72,7 @@ class AgentController extends Controller
             DB::commit();
             return res('Agent deleted successfully');
         } catch (Exception $e) {
+            DB::rollBack();
             return res($e->getMessage(), 400);
         }
     }
