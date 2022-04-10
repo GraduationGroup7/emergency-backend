@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class AgentController extends Controller
 {
@@ -25,7 +27,6 @@ class AgentController extends Controller
         return res($agent);
     }
 
-    // update agent
     public function updateAgent(Request $request, $id)
     {
         $agent = Agent::find($id);
@@ -53,5 +54,26 @@ class AgentController extends Controller
         }
 
         return Agent::query()->create($data);
+    }
+
+    public function deleteAgent($id)
+    {
+        $agent = Agent::query()->find($id);
+        if (!$agent) {
+            return res('Authority not found', 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($agent->user_id);
+            $agent->delete();
+            $user->delete();
+
+            DB::commit();
+            return res('Agent deleted successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return res($e->getMessage(), 400);
+        }
     }
 }
