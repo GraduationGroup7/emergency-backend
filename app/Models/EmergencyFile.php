@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EmergencyFile extends Model
 {
-    protected $fillable = ['name', 'type', 'url'];
+    protected $fillable = ['emergency_id', 'name', 'type', 'url'];
     use HasFactory;
 }
