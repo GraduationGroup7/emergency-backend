@@ -18,8 +18,14 @@ use Illuminate\Support\Facades\Route;
  * Authentication Routes
  */
 Route::group(['prefix' => 'auth'], function () {
+    // For Administrative Users
     Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
     Route::post('register', [\App\Http\Controllers\AuthController::class, 'register']);
+
+    // For Regular Users
+    Route::group(['prefix' => 'customer'], function () {
+        Route::post('register', [\App\Http\Controllers\AuthController::class, 'customer_register']);
+    });
 });
 
 
@@ -54,6 +60,10 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgent']);
         Route::put('/{id}', [\App\Http\Controllers\AgentController::class, 'updateAgent']);
         Route::delete('/{id}', [\App\Http\Controllers\AgentController::class, 'deleteAgent']);
+    });
+
+    Route::group(['prefix' => 'customers'], function () {
+        Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomers']);
     });
 });
 
