@@ -61,5 +61,9 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/{id}', [\App\Http\Controllers\AgentController::class, 'updateAgent']);
         Route::delete('/{id}', [\App\Http\Controllers\AgentController::class, 'deleteAgent']);
     });
+
+    Route::group(['prefix' => 'customers'], function () {
+        Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomers']);
+    });
 });
 
