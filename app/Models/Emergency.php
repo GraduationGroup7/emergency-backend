@@ -12,7 +12,11 @@ class Emergency extends Model
         'approving_authority_id',
         'completed',
         'latitude',
-        'longitude'
+        'longitude',
+        'emergency_type_id',
+        'description',
+        'country',
+        'city',
     ];
 
     use HasFactory;
