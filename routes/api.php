@@ -65,5 +65,16 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::group(['prefix' => 'customers'], function () {
         Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomers']);
     });
+
+    Route::group(['prefix' => 'emergencies'], function () {
+        Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
+        Route::get('/{id}', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
+        Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
+
+        Route::group(['prefix' => '{id}'], function () {
+            Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
+            Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
+        });
+    });
 });
 
