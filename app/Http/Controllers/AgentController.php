@@ -60,7 +60,7 @@ class AgentController extends Controller
     {
         $agent = Agent::query()->find($id);
         if (!$agent) {
-            return res('Authority not found', 404);
+            return res('Agent not found', 404);
         }
 
         DB::beginTransaction();
