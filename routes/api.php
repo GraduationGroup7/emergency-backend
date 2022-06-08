@@ -33,9 +33,9 @@ Route::group(['prefix' => 'auth'], function () {
  * Protected Routes
  */
 Route::middleware('auth:sanctum')->group(function() {
-   Route::get('/user', function (Request $request) {
-       return $request->user();
-   });
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 
     Route::get('users', [\App\Http\Controllers\UserController::class, 'getUsers']);
 
@@ -74,8 +74,14 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['prefix' => '{id}'], function () {
             Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
             Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
-            Route::get('get_file/{file_name}', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyFile']);
         });
+    });
+});
+
+// Serving files without authentication (for now)
+Route::group(['prefix' => 'emergencies'], function () {
+    Route::group(['prefix' => '{id}'], function () {
+        Route::get('get_file/{file_name}', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyFile']);
     });
 });
 
