@@ -29,7 +29,17 @@ class EmergencyController extends Controller
         if(!$emergency) {
             return res('Emergency not found', 404);
         }
-        return res($emergency);
+
+        $payload = $emergency->toArray();
+        $payload['files'] = [];
+
+        // fetch the emergency files
+        $files = EmergencyFile::query()->where('emergency_id', $id)->get();
+        foreach ($files as $file) {
+            $payload['files'][] = '/emergencies/' . $id . '/get_file/' . $file->name;
+        }
+
+        return res($payload);
     }
 
     public function createEmergency(Request $request): JsonResponse
@@ -61,8 +71,8 @@ class EmergencyController extends Controller
             $emergency = Emergency::query()->create($payload);
 
             foreach ($request->file() as $file) {
-                $filePath = 'files/emergency_' . $emergency->id;
-                $path = $file->store($filePath, 's3');
+                $filePath = 'files/emergency_' . $emergency->id . '/';
+                $path = Storage::disk('s3')->putFileAs($filePath, $file, $file->getClientOriginalName());
                 if($path === false) throw new Exception('Error uploading file');
 
                 EmergencyFile::create([
@@ -72,14 +82,13 @@ class EmergencyController extends Controller
                     'url' => Storage::disk('s3')->url($path),
                 ]);
             }
-
             DB::commit();
+
+            return res($emergency);
         } catch (Exception $exception) {
             DB::rollBack();
             return res($exception->getMessage(), 500);
         }
-
-        return res($request->all());
     }
 
     public function assignAgentsToEmergency(Request $request, int $id): JsonResponse
@@ -168,5 +177,22 @@ class EmergencyController extends Controller
         }
 
         return res('Agent(s) removed from emergency');
+    }
+
+    public function getEmergencyFile(Request $request, $id, string $filename): \Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        // Get the file from s3
+        $file = 'files/emergency_' . $id . '/' . $filename;
+
+        $fileData = Storage::disk('s3')->get($file);
+
+        $headers = [
+            'Content-Type'        => 'application/octet-stream',
+            'Content-Disposition' => 'attachment; filename=' . $filename,
+        ];
+
+        return response()->stream(function () use ($fileData) {
+            echo $fileData;
+        }, 200, $headers);
     }
 }

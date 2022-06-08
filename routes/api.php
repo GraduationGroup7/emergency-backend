@@ -74,6 +74,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['prefix' => '{id}'], function () {
             Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
             Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
+            Route::get('get_file/{file_name}', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyFile']);
         });
     });
 });
