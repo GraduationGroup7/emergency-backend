@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use App\Models\ChatRoom;
 use App\Models\Customer;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
@@ -194,5 +195,22 @@ class EmergencyController extends Controller
         return response()->stream(function () use ($fileData) {
             echo $fileData;
         }, 200, $headers);
+    }
+
+    public function getChatRoom(Request $request, $id): JsonResponse
+    {
+        $emergency = Emergency::find($id);
+        if(!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
+        if(!$chatRoom) {
+            return res('Chat room not found', 404);
+        }
+
+        $payload = $chatRoom->toArray();
+        $payload['messages'] = $chatRoom->getMessages();
+        return res($payload);
     }
 }

@@ -15,10 +15,11 @@ class ChatRoom extends Model
 
     use HasFactory;
 
-    public function getMessages($limit=null): Collection|array
+    public function getMessages($limit=25): Collection|array
     {
         return ChatMessage::query()
             ->where('chat_room_id', $this->id)
+            ->orderBy('created_at', 'desc')
             ->limit($limit)->get();
     }
 }

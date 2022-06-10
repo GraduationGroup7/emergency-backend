@@ -74,6 +74,17 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['prefix' => '{id}'], function () {
             Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
             Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
+            Route::get('chat_room', [\App\Http\Controllers\EmergencyController::class, 'getChatRoom']);
+        });
+    });
+
+    Route::group(['prefix' => 'chat_rooms'], function () {
+        Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getAllChatRooms']);
+        Route::group(['prefix' => '{id}'], function () {
+            Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getChatRoom']);
+            Route::post('/', [\App\Http\Controllers\ChatRoomController::class, 'postMessageToChatRoom']);
+            Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getChatRoom']);
+            Route::get('messages', [\App\Http\Controllers\ChatRoomController::class, 'getChatRoomMessages']);
         });
     });
 });
