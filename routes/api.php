@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['prefix' => 'agents'], function () {
+        Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
         Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgents']);
         Route::get('/{id}', [\App\Http\Controllers\AgentController::class, 'getAgent']);
         Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgent']);

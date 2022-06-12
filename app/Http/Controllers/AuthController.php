@@ -42,6 +42,7 @@ class AuthController extends Controller
             'userData'      => [
                 'id'            => $user->id,
                 'email'         => $user->email,
+                'type'         => $user->type,
                 'password'      => $user->password,
             ],
         ]);
