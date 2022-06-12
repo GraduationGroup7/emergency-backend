@@ -222,4 +222,66 @@ class EmergencyController extends Controller
         $payload['messages'] = $chatRoom->getMessages();
         return res($payload);
     }
+
+    public function getArchivalEmergencies(Request $request): JsonResponse
+    {
+        $completedEmergencies = Emergency::query()
+            ->where('completed', true)
+            ->paginate();
+
+        return res($completedEmergencies);
+    }
+
+    public function mergeEmergencies(Request $request) {
+        $mainEmergency = Emergency::find($request->mainEmergencyId);
+        if (!$mainEmergency) {
+            return res('Main emergency not found', 404);
+        }
+
+        $emergencyIds = $request->emergencyIds;
+
+        try {
+            DB::beginTransaction();
+
+            $descriptions = [];
+            $files = [];
+            foreach ($emergencyIds as $emergencyId) {
+                $emergency = Emergency::find($emergencyId);
+                if(!$emergency) {
+                    return res('Emergency with id ' . $emergency->id . ' could not be found', 404);
+                }
+
+                $descriptions[] = $emergency->description;
+                $files = array_merge($files, EmergencyFile::query()->where('emergency_id', $emergency->id)->get()->toArray());
+
+                $emergency->is_active = false;
+                $emergency->save();
+            }
+
+            // Create the emergency
+            $emergency = Emergency::query()->create([
+                'description' => implode('\n', $descriptions),
+                'latitude' => $mainEmergency->latitude,
+                'longitude' => $mainEmergency->longitude,
+                'reporting_customer_id' => $mainEmergency->reporting_customer_id,
+                'emergency_type_id' => $mainEmergency->emergency_type_id,
+            ]);
+
+            foreach ($files as $file) {
+                Log::info('FILE: ' . json_encode($file));
+                EmergencyFile::query()->create([
+                    'emergency_id' => $emergency->id,
+                    'name' => $file['name'],
+                    'type' => $file['type'],
+                    'url' => $file['url'],
+                ]);
+            }
+
+            DB::commit();
+            return res('Emergencies merged');
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return res($exception->getMessage(), 500);
+        }
+    }
 }

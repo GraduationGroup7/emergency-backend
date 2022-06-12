@@ -17,6 +17,7 @@ class Emergency extends Model
         'description',
         'country',
         'city',
+        'is_active',
     ];
 
     use HasFactory;

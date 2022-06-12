@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['prefix' => 'emergencies'], function () {
+        Route::get('archival', [\App\Http\Controllers\EmergencyController::class, 'getArchivalEmergencies']);
+        Route::post('merge', [\App\Http\Controllers\EmergencyController::class, 'mergeEmergencies']);
         Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
         Route::get('/{id}', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
         Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
