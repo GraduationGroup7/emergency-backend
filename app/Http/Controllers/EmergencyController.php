@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Storage;
 
 class EmergencyController extends Controller
 {
-    public function getEmergencies(): JsonResponse
+    public function getEmergencies(Request $request): JsonResponse
     {
-        $emergencies = Emergency::all();
+        $emergencies = Emergency::query()->paginate($request->input('per_page', 15));
         return res($emergencies);
     }
 
