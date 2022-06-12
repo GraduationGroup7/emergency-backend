@@ -71,6 +71,8 @@ class EmergencyController extends Controller
 
             $emergency = Emergency::query()->create($payload);
 
+            Log::info('Files' . $request->file());
+
             foreach ($request->file() as $file) {
                 $filePath = 'files/emergency_' . $emergency->id . '/';
                 $path = Storage::disk('s3')->putFileAs($filePath, $file, $file->getClientOriginalName());
