@@ -47,6 +47,8 @@ class EmergencyController extends Controller
     {
         $user = Auth::user();
 
+        Log::info('THIS IS THE REQUEST ' . json_encode($request->all()));
+
         $validator = validator($request->all(), [
             'description' => 'required|string|max:255',
             'latitude' => 'required|numeric',
