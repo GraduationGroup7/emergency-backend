@@ -159,4 +159,9 @@ class AuthController extends Controller
             return res($e->getMessage(), 500);
         }
     }
+
+    public function getUser(Request $request): JsonResponse
+    {
+        return res(Auth::user());
+    }
 }
