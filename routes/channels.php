@@ -17,7 +17,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
+Broadcast::channel('private-chat.{roomId}', function ($user, $roomId) {
     if(\Illuminate\Support\Facades\Auth::check()) {
         return ['id' => $user->id, 'name' => $user->name];
     }

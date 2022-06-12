@@ -73,6 +73,11 @@ class EmergencyController extends Controller
 
             $emergency = Emergency::query()->create($payload);
 
+            // Create the chat room for the emergency
+            ChatRoom::query()->create([
+                'emergency_id' => $emergency->id
+            ]);
+
             foreach ($request->file() as $file) {
                 $filePath = 'files/emergency_' . $emergency->id . '/';
                 $path = Storage::disk('s3')->putFileAs($filePath, $file, $file->getClientOriginalName());

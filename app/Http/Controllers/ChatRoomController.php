@@ -7,6 +7,7 @@ use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChatRoomController extends Controller
 {
@@ -30,6 +31,7 @@ class ChatRoomController extends Controller
 
     public function postMessageToChatRoom(Request $request, $id): JsonResponse
     {
+        $user = Auth::user();
         $chatRoom = ChatRoom::find($id);
         if(!$chatRoom) {
             return res('Chat room not found', 404);
@@ -41,7 +43,7 @@ class ChatRoomController extends Controller
             'message' => $request->message,
         ]);
 
-        broadcast(new NewChatMessage($message))->toOthers();
+        broadcast(new NewChatMessage($user, $message))->toOthers();
 
         return res($message);
     }

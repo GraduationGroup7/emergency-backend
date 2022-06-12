@@ -87,6 +87,11 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get('messages', [\App\Http\Controllers\ChatRoomController::class, 'getChatRoomMessages']);
         });
     });
+
+    // route group for pusher
+    Route::group(['prefix' => 'pusher'], function () {
+        Route::post('auth', [\App\Http\Controllers\PusherController::class, 'auth']);
+    });
 });
 
 // Serving files without authentication (for now)
