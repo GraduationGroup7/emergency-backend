@@ -76,6 +76,8 @@ class EmergencyController extends Controller
                 $path = Storage::disk('s3')->putFileAs($filePath, $file, $file->getClientOriginalName());
                 if($path === false) throw new Exception('Error uploading file');
 
+                Log::info('Uploaded file ' . $path);
+
                 EmergencyFile::create([
                     'emergency_id' => $emergency->id,
                     'name' => $file->getClientOriginalName(),
