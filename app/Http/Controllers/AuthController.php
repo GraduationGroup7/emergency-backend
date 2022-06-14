@@ -164,6 +164,7 @@ class AuthController extends Controller
             return res([
                 'user' => $user,
                 'token' => $user->createToken('Personal Access Token')->plainTextToken,
+                'request_id' => $response->getRequestId()
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -208,7 +209,6 @@ class AuthController extends Controller
             return res([
                 'user' => $user,
                 'token' => $user->createToken('Personal Access Token')->plainTextToken,
-                'request_id' => $response->getRequestId()
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
