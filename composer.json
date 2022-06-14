@@ -13,7 +13,7 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.14",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "pusher/pusher-php-server": "^7.0"
+        "pusher/pusher-php-server": "^7.0",
         "laravel/tinker": "^2.5",
         "vonage/client": "^3.0"
     },
