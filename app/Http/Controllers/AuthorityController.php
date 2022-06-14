@@ -36,9 +36,9 @@ class AuthorityController extends Controller
         }
 
         $validator = validator($request->all(), [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
+            'first_name' => 'string|max:255',
+            'last_name' => 'string|max:255',
+            'user_id' => 'exists:users,id',
         ]);
 
         if ($validator->fails()) {
