@@ -56,7 +56,6 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'request_id' => 'required|string',
             'code' => 'required|string',
-            'type' => 'required|string',
             'id' =>   'required|string'
         ]);
 
@@ -70,21 +69,11 @@ class AuthController extends Controller
 
         try {
             $result = $client->verify()->check($request->request_id, $request->code);
-            var_dump($result->getResponseData());
 
-            if(compareWithEnum($request->type, UserTypeEnum::AUTHORITY)) {
-                $authority = Authority::query()->find($request->id);
-                if ($authority) {
-                    $authority->verified = 1;
-                    $authority->save();
-                }
-            }
-            else if(compareWithEnum($request->type, UserTypeEnum::AGENT)) {
-                $agent = Agent::find($request->id);
-                if($agent) {
-                    $agent->verified = 1;
-                    $agent->save();
-                }
+            $customer = Customer::query()->find($request->id);
+            if($customer) {
+                $customer->verified = 1;
+                $customer->save();
             }
 
             return 'success';
@@ -101,7 +90,6 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|confirmed',
             'type' => [new Enum(UserTypeEnum::class)],
-            'phone' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -115,15 +103,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'type' => $request->type,
-                'phone' => $request->phone,
-                'verified' => 0,
             ]);
-
-            $basic  = new \Vonage\Client\Credentials\Basic("47ac5dca", "CUcRGKKwEyqV0AlI");
-            $client = new \Vonage\Client(new \Vonage\Client\Credentials\Container($basic));
-
-            $request = new \Vonage\Verify\Request($request->phone, "Emergency");
-            $response = $client->verify()->start($request);
 
             $user->save();
 
@@ -164,7 +144,6 @@ class AuthController extends Controller
             return res([
                 'user' => $user,
                 'token' => $user->createToken('Personal Access Token')->plainTextToken,
-                'request_id' => $response->getRequestId()
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -180,6 +159,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'dob' => 'required|date',
             'password' => 'required|string|confirmed',
+            'phone' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -192,8 +172,15 @@ class AuthController extends Controller
                 'name' => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'type' => $request->type,
+                'phone' => $request->phone,
+                'verified' => 0,
             ]);
+
+            $basic  = new \Vonage\Client\Credentials\Basic("47ac5dca", "CUcRGKKwEyqV0AlI");
+            $client = new \Vonage\Client(new \Vonage\Client\Credentials\Container($basic));
+
+            $phone_request = new \Vonage\Verify\Request($request->phone, "Emergency");
+            $response = $client->verify()->start($phone_request);
 
             $user->save();
 
@@ -209,6 +196,7 @@ class AuthController extends Controller
             return res([
                 'user' => $user,
                 'token' => $user->createToken('Personal Access Token')->plainTextToken,
+                'request_id' => $response->getRequestId()
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
