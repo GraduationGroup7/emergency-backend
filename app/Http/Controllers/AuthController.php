@@ -42,6 +42,7 @@ class AuthController extends Controller
             'userData'      => [
                 'id'            => $user->id,
                 'email'         => $user->email,
+                'type'         => $user->type,
                 'password'      => $user->password,
             ],
         ]);
@@ -157,5 +158,10 @@ class AuthController extends Controller
             DB::rollBack();
             return res($e->getMessage(), 500);
         }
+    }
+
+    public function getUser(Request $request): JsonResponse
+    {
+        return res(Auth::user());
     }
 }

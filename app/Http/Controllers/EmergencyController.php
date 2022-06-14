@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use App\Models\ChatRoom;
 use App\Models\Customer;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
@@ -17,9 +18,9 @@ use Illuminate\Support\Facades\Storage;
 
 class EmergencyController extends Controller
 {
-    public function getEmergencies(): JsonResponse
+    public function getEmergencies(Request $request): JsonResponse
     {
-        $emergencies = Emergency::all();
+        $emergencies = Emergency::query()->paginate($request->input('per_page', 15));
         return res($emergencies);
     }
 
@@ -46,6 +47,8 @@ class EmergencyController extends Controller
     {
         $user = Auth::user();
 
+        Log::info('THIS IS THE REQUEST ' . json_encode($request->all()));
+
         $validator = validator($request->all(), [
             'description' => 'required|string|max:255',
             'latitude' => 'required|numeric',
@@ -70,10 +73,17 @@ class EmergencyController extends Controller
 
             $emergency = Emergency::query()->create($payload);
 
+            // Create the chat room for the emergency
+            ChatRoom::query()->create([
+                'emergency_id' => $emergency->id
+            ]);
+
             foreach ($request->file() as $file) {
                 $filePath = 'files/emergency_' . $emergency->id . '/';
                 $path = Storage::disk('s3')->putFileAs($filePath, $file, $file->getClientOriginalName());
                 if($path === false) throw new Exception('Error uploading file');
+
+                Log::info('Uploaded file ' . $path);
 
                 EmergencyFile::create([
                     'emergency_id' => $emergency->id,
@@ -194,5 +204,84 @@ class EmergencyController extends Controller
         return response()->stream(function () use ($fileData) {
             echo $fileData;
         }, 200, $headers);
+    }
+
+    public function getChatRoom(Request $request, $id): JsonResponse
+    {
+        $emergency = Emergency::find($id);
+        if(!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
+        if(!$chatRoom) {
+            return res('Chat room not found', 404);
+        }
+
+        $payload = $chatRoom->toArray();
+        $payload['messages'] = $chatRoom->getMessages();
+        return res($payload);
+    }
+
+    public function getArchivalEmergencies(Request $request): JsonResponse
+    {
+        $completedEmergencies = Emergency::query()
+            ->where('completed', true)
+            ->paginate();
+
+        return res($completedEmergencies);
+    }
+
+    public function mergeEmergencies(Request $request) {
+        $mainEmergency = Emergency::find($request->mainEmergencyId);
+        if (!$mainEmergency) {
+            return res('Main emergency not found', 404);
+        }
+
+        $emergencyIds = $request->emergencyIds;
+
+        try {
+            DB::beginTransaction();
+
+            $descriptions = [];
+            $files = [];
+            foreach ($emergencyIds as $emergencyId) {
+                $emergency = Emergency::find($emergencyId);
+                if(!$emergency) {
+                    return res('Emergency with id ' . $emergency->id . ' could not be found', 404);
+                }
+
+                $descriptions[] = $emergency->description;
+                $files = array_merge($files, EmergencyFile::query()->where('emergency_id', $emergency->id)->get()->toArray());
+
+                $emergency->is_active = false;
+                $emergency->save();
+            }
+
+            // Create the emergency
+            $emergency = Emergency::query()->create([
+                'description' => implode('\n', $descriptions),
+                'latitude' => $mainEmergency->latitude,
+                'longitude' => $mainEmergency->longitude,
+                'reporting_customer_id' => $mainEmergency->reporting_customer_id,
+                'emergency_type_id' => $mainEmergency->emergency_type_id,
+            ]);
+
+            foreach ($files as $file) {
+                Log::info('FILE: ' . json_encode($file));
+                EmergencyFile::query()->create([
+                    'emergency_id' => $emergency->id,
+                    'name' => $file['name'],
+                    'type' => $file['type'],
+                    'url' => $file['url'],
+                ]);
+            }
+
+            DB::commit();
+            return res('Emergencies merged');
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return res($exception->getMessage(), 500);
+        }
     }
 }

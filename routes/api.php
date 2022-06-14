@@ -33,9 +33,7 @@ Route::group(['prefix' => 'auth'], function () {
  * Protected Routes
  */
 Route::middleware('auth:sanctum')->group(function() {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('user', [\App\Http\Controllers\AuthController::class, 'getUser']);
 
     Route::get('users', [\App\Http\Controllers\UserController::class, 'getUsers']);
 
@@ -55,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['prefix' => 'agents'], function () {
+        Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
         Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgents']);
         Route::get('/{id}', [\App\Http\Controllers\AgentController::class, 'getAgent']);
         Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgent']);
@@ -67,6 +66,8 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['prefix' => 'emergencies'], function () {
+        Route::get('archival', [\App\Http\Controllers\EmergencyController::class, 'getArchivalEmergencies']);
+        Route::post('merge', [\App\Http\Controllers\EmergencyController::class, 'mergeEmergencies']);
         Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
         Route::get('/{id}', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
         Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
@@ -74,7 +75,23 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['prefix' => '{id}'], function () {
             Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
             Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
+            Route::get('chat_room', [\App\Http\Controllers\EmergencyController::class, 'getChatRoom']);
         });
+    });
+
+    Route::group(['prefix' => 'chat_rooms'], function () {
+        Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getAllChatRooms']);
+        Route::group(['prefix' => '{id}'], function () {
+            Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getChatRoom']);
+            Route::post('/', [\App\Http\Controllers\ChatRoomController::class, 'postMessageToChatRoom']);
+            Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getChatRoom']);
+            Route::get('messages', [\App\Http\Controllers\ChatRoomController::class, 'getChatRoomMessages']);
+        });
+    });
+
+    // route group for pusher
+    Route::group(['prefix' => 'pusher'], function () {
+        Route::post('auth', [\App\Http\Controllers\PusherController::class, 'auth']);
     });
 });
 
