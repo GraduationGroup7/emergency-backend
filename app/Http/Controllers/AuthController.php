@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Enum;
 
@@ -159,7 +160,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'dob' => 'required|date',
             'password' => 'required|string|confirmed',
-            'phone_number' => 'required|string|unique:users',
+            'phone_number' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -200,6 +201,7 @@ class AuthController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::info(json_encode($e->getMessage()));
             return res($e->getMessage(), 500);
         }
     }
