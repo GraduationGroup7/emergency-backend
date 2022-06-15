@@ -159,7 +159,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'dob' => 'required|date',
             'password' => 'required|string|confirmed',
-            'phone' => 'required|string',
+            'phone_number' => 'required|string|unique:users',
         ]);
 
         if ($validator->fails()) {
@@ -172,14 +172,14 @@ class AuthController extends Controller
                 'name' => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'phone_number' => $request->phone,
+                'phone_number' => $request->phone_number,
                 'verified' => 0,
             ]);
 
             $basic  = new \Vonage\Client\Credentials\Basic("47ac5dca", "CUcRGKKwEyqV0AlI");
             $client = new \Vonage\Client(new \Vonage\Client\Credentials\Container($basic));
 
-            $phone_request = new \Vonage\Verify\Request($request->phone, "Emergency");
+            $phone_request = new \Vonage\Verify\Request($request->phone_number, "Emergency");
             $response = $client->verify()->start($phone_request);
 
             $user->save();
