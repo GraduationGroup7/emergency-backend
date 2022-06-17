@@ -173,7 +173,6 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'phone_number' => $request->phone_number,
-                'verified' => 0,
             ]);
 
             $basic  = new \Vonage\Client\Credentials\Basic("47ac5dca", "CUcRGKKwEyqV0AlI");
@@ -189,6 +188,7 @@ class AuthController extends Controller
                 'last_name' => $request->last_name,
                 'user_id' => $user->id,
                 'dob' => Carbon::parse($request->dob),
+                'verified' => 0,
             ]);
 
             DB::commit();
