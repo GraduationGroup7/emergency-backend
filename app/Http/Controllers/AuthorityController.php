@@ -83,7 +83,7 @@ class AuthorityController extends Controller
             DB::commit();
             return res('Authority deleted successfully');
         } catch (Exception $e) {
-            return res($e->getMessage(), 400);
+            return res('Authority could not be deleted', 400);
         }
     }
 }
