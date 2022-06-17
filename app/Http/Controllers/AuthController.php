@@ -78,7 +78,7 @@ class AuthController extends Controller
             return res('Phone verified successfully', 200);
         } catch (\Exception $e) {
             Log::info(json_encode($e->getTrace()));
-            return res($e->getMessage(), 500);
+            return res('The user could not be verified', 500);
         }
 
     }
@@ -147,7 +147,8 @@ class AuthController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return res($e->getMessage(), 500);
+            Log::info(json_encode($e->getTrace()));
+            return res('Could not register user', 500);
         }
     }
 
@@ -201,7 +202,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::info(json_encode($e->getMessage()));
-            return res($e->getMessage(), 500);
+            return res('Could not register customer', 500);
         }
     }
 
