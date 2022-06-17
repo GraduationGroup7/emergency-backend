@@ -79,7 +79,7 @@ class AuthController extends Controller
 
             return res('Phone verified successfully', 200);
         } catch (\Exception $e) {
-            return res($e->getMessage(), 500);
+            return res($e, 500);
         }
 
     }
