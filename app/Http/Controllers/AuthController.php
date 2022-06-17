@@ -29,9 +29,7 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
         {
-            return response()->json([
-                'message' => 'Incorrect username or password'
-            ],400);
+            return res('Incorrect username or password', 400);
         }
 
         $user = $request->user();
