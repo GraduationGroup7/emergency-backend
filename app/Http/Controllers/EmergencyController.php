@@ -284,4 +284,24 @@ class EmergencyController extends Controller
             return res($exception->getMessage(), 500);
         }
     }
+
+    public function getEmergenciesForUser(Request $request) {
+        $user = $request->user();
+        if (!$user || $user->type != 'user') {
+            return res('User not found', 404);
+        }
+
+        $customer = Customer::query()->where('user_id', $user->id)->first();
+
+        $emergencies = Emergency::query()
+            ->select(
+                'emergencies.*',
+                'chat_rooms.id as chat_room_id'
+            )
+            ->join('chat_rooms', 'emergencies.id', '=', 'chat_rooms.emergency_id')
+            ->where('reporting_customer_id', $customer->id)
+            ->get();
+
+        return res($emergencies);
+    }
 }

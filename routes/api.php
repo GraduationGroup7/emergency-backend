@@ -34,11 +34,14 @@ Route::group(['prefix' => 'auth'], function () {
  * Protected Routes
  */
 Route::middleware('auth:sanctum')->group(function() {
-    Route::get('user', [\App\Http\Controllers\AuthController::class, 'getUser']);
-
     Route::get('users', [\App\Http\Controllers\UserController::class, 'getUsers']);
 
-    Route::group(['prefix' => 'emergency_types'], function () {
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('/', [\App\Http\Controllers\AuthController::class, 'getUser']);
+        Route::get('emergencies', [\App\Http\Controllers\EmergencyController::class, 'getEmergenciesForUser']);
+    });
+
+        Route::group(['prefix' => 'emergency_types'], function () {
         Route::get('/', [\App\Http\Controllers\EmergencyTypeController::class, 'getEmergencyTypes']);
         Route::post('/', [\App\Http\Controllers\EmergencyTypeController::class, 'createEmergencyType']);
         Route::get('/{id}', [\App\Http\Controllers\EmergencyTypeController::class, 'getEmergencyType']);
