@@ -208,6 +208,6 @@ class AuthController extends Controller
     public function getUser(Request $request): JsonResponse
     {
         $user = Auth::user();
-        return res(User::query()->find($user->id)->toArray());
+        return res('asdasd');
     }
 }
