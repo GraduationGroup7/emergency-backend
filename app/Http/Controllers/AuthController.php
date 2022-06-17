@@ -200,7 +200,7 @@ class AuthController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::info(json_encode($e->getFile() . ' ' . $e->getLine()));
+            Log::info(json_encode($e));
             return res($e, 500);
         }
     }

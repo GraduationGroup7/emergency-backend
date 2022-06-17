@@ -12,7 +12,7 @@ class Customer extends Model
         'first_name',
         'last_name',
         'dob',
-        'verify'
+        'verified'
     ];
 
     use HasFactory;
