@@ -79,7 +79,8 @@ class AuthController extends Controller
 
             return res('Phone verified successfully', 200);
         } catch (\Exception $e) {
-            return res($e, 500);
+            Log::info(json_encode($e->getTrace()));
+            return res($e->getMessage(), 500);
         }
 
     }
