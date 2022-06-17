@@ -71,12 +71,13 @@ class AuthController extends Controller
             $result = $client->verify()->check($request->request_id, $request->code);
 
             $customer = Customer::query()->where('user_id', $user->id)->first();
-            if($customer) {
-                $customer->verified = 1;
-                $customer->save();
-            }
+            if(!$customer) return res('Customer not found', 404);
 
-            return 'success';
+            $customer->update([
+                'verified' => true,
+            ]);
+
+            return res('Phone verified successfully', 200);
         } catch (\Exception $e) {
             return res($e->getMessage(), 500);
         }
