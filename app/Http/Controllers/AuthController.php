@@ -53,14 +53,12 @@ class AuthController extends Controller
 
     public function verifyPhone(Request $request)
     {
-        $user = Auth::user();
         $validator = Validator::make($request->all(), [
             'request_id' => 'required|string',
             'code' => 'required|string',
+            'id' => 'required|string',
         ]);
 
-        Log::info('THIS IS THE USER ' . json_encode($user));
-        
         if ($validator->fails()) {
             return res($validator->errors(), 400);
         }
@@ -72,7 +70,7 @@ class AuthController extends Controller
         try {
             $result = $client->verify()->check($request->request_id, $request->code);
 
-            $customer = Customer::query()->where('user_id', $user->id)->first();
+            $customer = Customer::query()->where('user_id', $request->id)->first();
             if(!$customer) return res('Customer not found', 404);
 
             $customer->update([
