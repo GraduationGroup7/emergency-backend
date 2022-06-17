@@ -70,6 +70,7 @@ class AuthController extends Controller
         try {
             $result = $client->verify()->check($request->request_id, $request->code);
 
+            Log::info('THIS IS THE USER ' . json_encode($user));
             $customer = Customer::query()->where('user_id', $user->id)->first();
             if(!$customer) return res('Customer not found', 404);
 
