@@ -207,6 +207,8 @@ class AuthController extends Controller
 
     public function getUser(Request $request): JsonResponse
     {
-        return res(Auth::user());
+        $user = Auth::user();
+        $user = User::find($user->id);
+        return res($user);
     }
 }
