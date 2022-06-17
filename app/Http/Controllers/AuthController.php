@@ -208,6 +208,15 @@ class AuthController extends Controller
     public function getUser(Request $request): JsonResponse
     {
         $user = Auth::user();
-        return res('asdasd');
+        $user = array_merge(
+            $user->toArray(),
+            ['verified' => false]
+        );
+
+        if($user['type'] == 'user') {
+            $user['verified'] = Customer::query()->where('user_id', $user['id'])->first()->verified;
+        }
+
+        return res($user);
     }
 }
