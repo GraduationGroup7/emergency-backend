@@ -226,7 +226,7 @@ class EmergencyController extends Controller
     {
         $completedEmergencies = Emergency::query()
             ->where('completed', true)
-            ->paginate();
+            ->paginate($request->input('perPage', 15));
 
         return res($completedEmergencies);
     }
