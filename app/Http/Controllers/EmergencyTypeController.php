@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Validator;
 
 class EmergencyTypeController extends Controller
 {
-    public function getEmergencyTypes(): JsonResponse
+    public function getEmergencyTypes(Request $request): JsonResponse
     {
-        $emergencyTypes = EmergencyType::all();
+        $emergencyTypes = EmergencyType::query()->paginate($request->input('perPage') ?? 15);
         return res($emergencyTypes);
     }
 

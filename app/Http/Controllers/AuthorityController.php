@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\DB;
 
 class AuthorityController extends Controller
 {
-    public function getAuthorities(): JsonResponse
+    public function getAuthorities(Request $request): JsonResponse
     {
-        $authorities = Authority::all();
+        $authorities = Authority::query()->paginate($request->input('perPage') ?? 15);
         return res($authorities);
     }
 

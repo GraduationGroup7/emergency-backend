@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function getCustomers(): JsonResponse
+    public function getCustomers(Request $request): JsonResponse
     {
-        $customers = Customer::all();
+        $customers = Customer::query()->paginate($request->input('perPage') ?? 15);;
         return res($customers);
     }
 }

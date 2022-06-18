@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 class AgentController extends Controller
 {
 
-    public function getAgents()
+    public function getAgents(Request $request)
     {
-        $agents = Agent::all();
+        $agents = Agent::query()->paginate($request->input('perPage') ?? 15);
         return res($agents);
     }
 

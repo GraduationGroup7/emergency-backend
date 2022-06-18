@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatRoomController extends Controller
 {
-    public function getAllChatRooms(): JsonResponse
+    public function getAllChatRooms(Request $request): JsonResponse
     {
-        $chatRooms = ChatRoom::all();
+        $chatRooms = ChatRoom::query()->paginate($request->input('perPage') ?? 15);
         return res($chatRooms);
     }
 
