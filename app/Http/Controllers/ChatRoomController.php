@@ -39,22 +39,20 @@ class ChatRoomController extends Controller
         $chatRoom = ChatRoom::find($id);
         $emergency = Emergency::query()->find($chatRoom->emergency_id);
 
+        if(!$chatRoom) return res('Chat room not found', 404);
+
         if($user->type == UserTypeEnum::USER) {
             $customer = $user->getCustomer();
             if(!$customer || $customer->id != $emergency->reporting_customer_id)
                 return res('Unauthorized', 401);
         }
-        else if ($user->type == UserTypeEnum::AGENT) {
+        else {
             $agent = $user->getAgent();
             $emergencyAgent = EmergencyAgent::query()->where('emergency_id', $emergency->id)
                 ->where('agent_id', $agent->id)->first();
 
             if(!$emergencyAgent)
                 return res('Unauthorized', 401);
-        }
-
-        if(!$chatRoom) {
-            return res('Chat room not found', 404);
         }
 
         $message = ChatMessage::create([
