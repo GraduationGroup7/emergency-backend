@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ChatRoomController extends Controller
 {
@@ -41,6 +42,7 @@ class ChatRoomController extends Controller
 
         if(!$chatRoom) return res('Chat room not found', 404);
 
+        Log::info('USER TYPE' . $user->type);
         if($user->type == UserTypeEnum::USER) {
             $customer = $user->getCustomer();
             if(!$customer || $customer->id != $emergency->reporting_customer_id)
