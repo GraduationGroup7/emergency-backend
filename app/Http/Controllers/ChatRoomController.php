@@ -38,22 +38,11 @@ class ChatRoomController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $chatRoom = ChatRoom::find($id);
-        $emergency = Emergency::query()->find($chatRoom->emergency_id);
 
         if(!$chatRoom) return res('Chat room not found', 404);
 
-        if(compareWithEnum($user->type, UserTypeEnum::USER)) {
-            $customer = $user->getCustomer();
-            if(!$customer || $customer->id != $emergency->reporting_customer_id)
-                return res('Unauthorized', 401);
-        }
-        else {
-            $agent = $user->getAgent();
-            $emergencyAgent = EmergencyAgent::query()->where('emergency_id', $emergency->id)
-                ->where('agent_id', $agent->id)->first();
-
-            if(!$emergencyAgent)
-                return res('Unauthorized', 401);
+        if(!$this->checkIfAuthorized($user, $chatRoom)) {
+            return res('Unauthorized', 401);
         }
 
         $message = ChatMessage::create([
@@ -69,9 +58,15 @@ class ChatRoomController extends Controller
 
     public function getChatRoomMessages(Request $request, $id): JsonResponse
     {
+        $user = User::find(Auth::user()->id);
         $chatRoom = ChatRoom::find($id);
+
         if(!$chatRoom) {
             return res('Chat room not found', 404);
+        }
+
+        if(!$this->checkIfAuthorized($user, $chatRoom)) {
+            return res('Unauthorized', 401);
         }
 
         $messages = ChatMessage::query()
@@ -85,5 +80,23 @@ class ChatRoomController extends Controller
             ->paginate($request->per_page ?? 25);
 
         return res($messages);
+    }
+
+    private function checkIfAuthorized(User $user, ChatRoom $chatRoom): bool
+    {
+        $emergency = Emergency::query()->find($chatRoom->emergency_id);
+        if(compareWithEnum($user->type, UserTypeEnum::USER)) {
+            $customer = $user->getCustomer();
+            if(!$customer || $customer->id != $emergency->reporting_customer_id) return false;
+        }
+        else {
+            $agent = $user->getAgent();
+            $emergencyAgent = EmergencyAgent::query()->where('emergency_id', $emergency->id)
+                ->where('agent_id', $agent->id)->first();
+
+            if(!$emergencyAgent) return false;
+        }
+
+        return true;
     }
 }
