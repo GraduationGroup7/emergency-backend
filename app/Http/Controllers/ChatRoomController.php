@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NewChatMessage;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,7 @@ class ChatRoomController extends Controller
 
     public function postMessageToChatRoom(Request $request, $id): JsonResponse
     {
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
         $chatRoom = ChatRoom::find($id);
         if(!$chatRoom) {
             return res('Chat room not found', 404);
