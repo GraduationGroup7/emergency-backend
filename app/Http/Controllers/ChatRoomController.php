@@ -85,6 +85,9 @@ class ChatRoomController extends Controller
     private function checkIfAuthorized(User $user, ChatRoom $chatRoom): bool
     {
         $emergency = Emergency::query()->find($chatRoom->emergency_id);
+
+        Log::info('USER TYPE ' . $user->type);
+
         if(compareWithEnum($user->type, UserTypeEnum::USER)) {
             $customer = $user->getCustomer();
             if(!$customer || $customer->id != $emergency->reporting_customer_id) return false;
