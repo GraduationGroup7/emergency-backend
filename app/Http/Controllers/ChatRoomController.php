@@ -44,7 +44,7 @@ class ChatRoomController extends Controller
             'message' => $request->message,
         ]);
 
-        event(new NewChatMessage($user, $message));
+        broadcast(new NewChatMessage($user, $message))->toOthers();
 
         return res($message);
     }
