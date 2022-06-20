@@ -44,4 +44,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getCustomer(): Customer|null
+    {
+        return Customer::where('user_id', $this->id)->first();
+    }
+
+    public function getAgent(): Agent|null
+    {
+        return Agent::where('user_id', $this->id)->first();
+    }
 }
