@@ -42,8 +42,7 @@ class ChatRoomController extends Controller
 
         if(!$chatRoom) return res('Chat room not found', 404);
 
-        Log::info('USER TYPE' . $user->type);
-        if($user->type == UserTypeEnum::USER) {
+        if(compareWithEnum($user->type, UserTypeEnum::USER)) {
             $customer = $user->getCustomer();
             if(!$customer || $customer->id != $emergency->reporting_customer_id)
                 return res('Unauthorized', 401);
