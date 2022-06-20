@@ -62,6 +62,7 @@ class ChatRoomController extends Controller
             )
             ->join('users', 'users.id', '=', 'chat_messages.user_id')
             ->where('chat_room_id', $chatRoom->id)
+            ->orderByDesc('id')
             ->paginate($request->per_page ?? 25);
 
         return res($messages);
