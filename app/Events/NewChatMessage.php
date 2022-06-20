@@ -30,8 +30,23 @@ class NewChatMessage implements ShouldBroadcast
         $this->chatMessage = $chatMessage;
     }
 
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return \Illuminate\Broadcasting\Channel|array
+     */
     public function broadcastOn()
     {
-        return 'chat.' . $this->chatMessage->chat_room_id;
+        return new Channel('chat.' . $this->chatMessage->chat_room_id);
+    }
+
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'message';
     }
 }
