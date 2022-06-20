@@ -39,7 +39,7 @@ class ChatRoomController extends Controller
 
         $message = ChatMessage::create([
             'chat_room_id' => $chatRoom->id,
-            'user_id' => $request->user()->id,
+            'user_id' => $user->id,
             'message' => $request->message,
         ]);
 
