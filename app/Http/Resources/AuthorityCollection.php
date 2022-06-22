@@ -4,13 +4,13 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CustomerCollection extends ResourceCollection
+class AuthorityCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return array
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -18,26 +18,18 @@ class CustomerCollection extends ResourceCollection
             'data' => $this->collection,
             'columns' => [
                 [
-                    'headerName' => 'Customer ID',
+                    'headerName' => 'Authority ID',
                     'field' => 'id',
                 ],
                 [
-                    'headerName' => 'User ID',
-                    'field' => 'user_id'
-                ], [
                     'headerName' => 'First Name',
                     'field' => 'first_name'
                 ], [
                     'headerName' => 'Last Name',
                     'field' => 'last_name'
-                ],
-                [
-                    'headerName' => 'Date of Birth',
-                    'field' => 'dob'
-                ],
-                [
-                    'headerName' => 'Verified',
-                    'field' => 'verified'
+                ], [
+                    'headerName' => 'Created At',
+                    'field' => 'created_at'
                 ],
             ],
         ];

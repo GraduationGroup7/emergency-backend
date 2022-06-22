@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AuthorityCollection;
 use App\Models\Authority;
 use App\Models\User;
 use Exception;
@@ -12,10 +13,9 @@ use Illuminate\Support\Facades\DB;
 
 class AuthorityController extends Controller
 {
-    public function getAuthorities(Request $request): JsonResponse
+    public function getAuthorities(Request $request): AuthorityCollection
     {
-        $authorities = Authority::query()->paginate($request->input('perPage') ?? 15);
-        return res($authorities);
+        return new AuthorityCollection(Authority::query()->paginate($request->input('perPage') ?? 15));
     }
 
     public function getAuthority(int $id): JsonResponse

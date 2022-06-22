@@ -25,6 +25,7 @@ class EmergencyResource extends JsonResource
             'country' => $this->country,
             'city' => $this->city,
             'is_active' => $this->is_active,
+            'created_at' => $this->created_at,
         ];
     }
 }

@@ -16,7 +16,6 @@ class EmergencyCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection,
-            'date_interval' => true,
             'columns' => [
                 [
                     'headerName' => 'Emergency ID',
