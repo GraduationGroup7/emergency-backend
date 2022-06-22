@@ -20,8 +20,6 @@ class PusherController extends Controller
         $channelId = explode('.', $request->channel_name)[1];
         $chatRoom = ChatRoom::find($channelId);
 
-        Log::info('WHAT IS IT ' . env('APP_NAME'));
-
         if(!$chatRoom) {
             return res('Chat room not found', 403);
         }
@@ -36,7 +34,7 @@ class PusherController extends Controller
             }
 
             return response(json_encode([
-                'auth' => $auth,
+                'auth' => json_decode($auth),
                 'user_info' => $user->toArray(),
             ]), 200);
 
