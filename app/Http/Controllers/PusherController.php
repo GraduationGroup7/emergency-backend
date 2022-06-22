@@ -33,8 +33,10 @@ class PusherController extends Controller
                 return res('Unauthorized', 403);
             }
 
+            $authData = json_decode($auth, true);
             return response(json_encode([
-                'auth' => json_decode($auth, true)['auth'],
+                'auth' => $authData['auth'],
+                'what_data' => $authData,
                 'user_info' => $user->toArray(),
             ]), 200);
 
