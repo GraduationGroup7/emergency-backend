@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AgentCollection;
 use App\Models\Agent;
 use App\Models\Emergency;
 use App\Models\User;
@@ -15,8 +16,7 @@ class AgentController extends Controller
 
     public function getAgents(Request $request)
     {
-        $agents = Agent::query()->paginate($request->input('perPage') ?? 15);
-        return res($agents);
+        return new AgentCollection(Agent::query()->paginate($request->input('perPage') ?? 15));
     }
 
     public function getAgent($id)
