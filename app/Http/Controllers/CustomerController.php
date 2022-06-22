@@ -11,6 +11,6 @@ class CustomerController extends Controller
 {
     public function getCustomers(Request $request): CustomerCollection
     {;
-        return new CustomerCollection(Customer::query()->paginate($request->input('perPage') ?? 15));
+        return new CustomerCollection(Customer::query()->paginate(15));
     }
 }
