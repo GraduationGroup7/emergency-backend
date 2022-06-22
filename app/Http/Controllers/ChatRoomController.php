@@ -9,6 +9,7 @@ use App\Models\ChatRoom;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\User;
+use App\Services\ChatRoomService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
