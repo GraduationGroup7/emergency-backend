@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EmergencyCollection;
 use App\Models\Agent;
 use App\Models\ChatRoom;
 use App\Models\Customer;
@@ -18,10 +19,9 @@ use Illuminate\Support\Facades\Storage;
 
 class EmergencyController extends Controller
 {
-    public function getEmergencies(Request $request): JsonResponse
+    public function getEmergencies(Request $request): EmergencyCollection
     {
-        $emergencies = Emergency::query()->paginate($request->input('per_page', 15));
-        return res($emergencies);
+        return new EmergencyCollection(Emergency::query()->paginate($request->input('per_page', 15)));
     }
 
     public function getEmergency(Request $request, int $id): JsonResponse
