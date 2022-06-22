@@ -34,7 +34,7 @@ class PusherController extends Controller
             }
 
             return response(json_encode([
-                'auth' => json_decode($auth),
+                'auth' => json_decode($auth, true)['auth'],
                 'user_info' => $user->toArray(),
             ]), 200);
 
