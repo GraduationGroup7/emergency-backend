@@ -35,7 +35,7 @@ class PusherController extends Controller
 
             $authData = json_decode($auth, true);
             return response(json_encode([
-                'auth' => $pusher->socketAuth($request->channel_name, $request->socket_id),
+                'auth' => json_decode($pusher->socketAuth($request->channel_name, $request->socket_id), true)['auth'],
                 'what_data' => $authData,
                 'user_info' => $user->toArray(),
             ]), 200);
