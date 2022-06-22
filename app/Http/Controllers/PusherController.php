@@ -25,18 +25,16 @@ class PusherController extends Controller
         }
 
         try {
-            $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
-            $auth = $pusher->presenceAuth($request->channel_name, $request->socket_id, $user->id);
-
             $chatRoomService = new ChatRoomService();
             if(!$chatRoomService->checkIfAuthorized($user, $chatRoom)) {
                 return res('Unauthorized', 403);
             }
 
-            $authData = json_decode($auth, true);
+            $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
+            $authData = json_decode($pusher->socketAuth($request->channel_name, $request->socket_id), true)['auth'];
+
             return response(json_encode([
-                'auth' => json_decode($pusher->socketAuth($request->channel_name, $request->socket_id), true)['auth'],
-                'what_data' => $authData,
+                'auth' => $authData,
                 'user_info' => $user->toArray(),
             ]), 200);
 
