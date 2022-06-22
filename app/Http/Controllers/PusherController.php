@@ -24,7 +24,7 @@ class PusherController extends Controller
         }
 
         try {
-            $pusher = new Pusher(config('PUSHER_APP_KEY'), config('PUSHER_APP_SECRET'), config('PUSHER_APP_ID'));
+            $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
             $auth = $pusher->presenceAuth($request->socket_id, $request->channel_name, $user->id);
 
             $chatRoomService = new ChatRoomService();
