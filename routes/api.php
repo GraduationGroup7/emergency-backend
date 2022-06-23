@@ -97,6 +97,10 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::group(['prefix' => 'pusher'], function () {
         Route::post('auth', [\App\Http\Controllers\PusherController::class, 'auth']);
     });
+
+    Route::middleware([\App\Http\Middleware\ProtectAdmin::class])->prefix('admin')->group(function () {
+        Route::get('tables', [\App\Http\Controllers\AdminController::class, 'getTableRoutes']);
+    });
 });
 
 // Serving files without authentication (for now)
