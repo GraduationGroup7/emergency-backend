@@ -15,7 +15,7 @@ class AuthorityController extends Controller
 {
     public function getAuthorities(Request $request): AuthorityCollection
     {
-        return new AuthorityCollection(Authority::query()->paginate($request->input('perPage') ?? 15));
+        return new AuthorityCollection(kaantable(Authority::query(), $request));
     }
 
     public function getAuthority(int $id): JsonResponse

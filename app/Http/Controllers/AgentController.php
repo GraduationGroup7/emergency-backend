@@ -16,7 +16,7 @@ class AgentController extends Controller
 
     public function getAgents(Request $request)
     {
-        return new AgentCollection(Agent::query()->paginate($request->input('perPage') ?? 15));
+        return new AgentCollection(kaantable(Agent::query(), $request));
     }
 
     public function getAgent($id)
