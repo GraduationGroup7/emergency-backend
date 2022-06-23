@@ -377,17 +377,3 @@ if (! function_exists('with')) {
         return is_null($callback) ? $value : $callback($value);
     }
 }
-
-if (! function_exists('kaantable')) {
-    function kaantable (\Illuminate\Database\Eloquent\Builder $query, $request)
-    {
-        $orderBy = $request->input('orderBy', null);
-        $orderByDirection = $request->input('orderByDirection', null);
-
-        if($orderBy) {
-            $query = $query->orderBy($orderBy, $orderByDirection);
-        }
-
-        return $query->paginate($request->input('perPage', 15));
-    }
-}

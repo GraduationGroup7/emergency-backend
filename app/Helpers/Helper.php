@@ -35,3 +35,18 @@ if(!function_exists('compareWithEnum')) {
         return strtoupper($value) == $enum->name;
     }
 }
+
+function kaantable (\Illuminate\Database\Eloquent\Builder $query, $request)
+{
+    $orderBy = $request->input('orderBy', null);
+    $orderByDirection = $request->input('orderByDirection', null);
+
+    if($orderBy) {
+        \Illuminate\Support\Facades\Log::info('orderBy: ' . $orderBy);
+        \Illuminate\Support\Facades\Log::info('orderByDirection: ' . $orderByDirection);
+
+        $query = $query->orderBy($orderBy, $orderByDirection);
+    }
+
+    return $query->paginate($request->input('perPage', 15));
+}
