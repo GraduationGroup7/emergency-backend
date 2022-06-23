@@ -303,4 +303,22 @@ class EmergencyController extends Controller
 
         return res($emergencies);
     }
+
+    public function updateEmergency(Request $request): JsonResponse
+    {
+        $emergency = Emergency::find($request->id);
+        if (!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        $emergency->update([
+            'emergency_type_id' => $request->emergency_type_id,
+            'description' => $request->description,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'status' => $request->status,
+        ]);
+
+        return res('Emergency updated');
+    }
 }

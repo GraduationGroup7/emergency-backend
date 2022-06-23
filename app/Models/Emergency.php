@@ -20,5 +20,9 @@ class Emergency extends Model
         'is_active',
     ];
 
+    const STATUS_PENDING = "pending";
+    const STATUS_COMPLETED = "completed";
+    const STATUS_ABANDONED = "abandoned";
+
     use HasFactory;
 }

@@ -15,6 +15,7 @@ class EmergencyResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'reporting_customer_id' => $this->reporting_customer_id,
             'approving_authority_id' => $this->approving_authority_id,
             'completed' => $this->completed,
