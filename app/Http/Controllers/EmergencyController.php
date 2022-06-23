@@ -22,7 +22,7 @@ class EmergencyController extends Controller
 {
     public function getEmergencies(Request $request): EmergencyCollection
     {
-        return new EmergencyCollection(Emergency::query()->paginate($request->input('per_page', 15)));
+        return new EmergencyCollection(kaantable(Emergency::query(), $request));
     }
 
     public function getEmergency(Request $request, int $id): JsonResponse
