@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class EmergencyController extends Controller
 {
@@ -306,6 +307,18 @@ class EmergencyController extends Controller
 
     public function updateEmergency(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'emergency_type_id' => 'required|exists:emergency_types,id',
+            'description' => 'required|string',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'status' => 'required|string',
+            'completed' => 'required|boolean',
+            'is_active' => 'required|boolean',
+        ]);
+
+        if($validator->fails()) return res($validator->errors(), 400);
+
         $emergency = Emergency::find($request->id);
         if (!$emergency) {
             return res('Emergency not found', 404);
@@ -317,6 +330,8 @@ class EmergencyController extends Controller
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'status' => $request->status,
+            'completed' => $request->completed,
+            'is_active' => $request->is_active,
         ]);
 
         return res('Emergency updated');
