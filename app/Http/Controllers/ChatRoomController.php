@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enum\UserTypeEnum;
 use App\Events\NewChatMessage;
+use App\Events\NewNotification;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\Emergency;
@@ -53,6 +54,7 @@ class ChatRoomController extends Controller
         ]);
 
         broadcast(new NewChatMessage($user, $message))->toOthers();
+        broadcast(new NewNotification($user, ['lole' => 1]))->toOthers();
 
         return res($message);
     }
