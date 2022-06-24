@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AgentCollection;
+use App\Http\Resources\AgentResource;
 use App\Models\Agent;
 use App\Models\Emergency;
 use App\Models\User;
@@ -94,5 +95,21 @@ class AgentController extends Controller
             ->paginate($request->input('per_page', 15));
 
         return res($availableAgents);
+    }
+
+    public function getAgentForm(Request $request, $id): JsonResponse
+    {
+        $agent = Agent::find($id);
+        if(!$agent) {
+            return res('Agent not found', 404);
+        }
+
+        return res(new \App\Http\Resources\Forms\AgentResource($agent));
+    }
+
+    public function getAgentCreateForm(Request $request): JsonResponse
+    {
+        $agent = new Agent();
+        return res(new \App\Http\Resources\Forms\AgentResource($agent));
     }
 }
