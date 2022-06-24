@@ -51,9 +51,13 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::group(['prefix' => 'authorities'], function () {
         Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthorities']);
-        Route::get('/{id}', [\App\Http\Controllers\AuthorityController::class, 'getAuthority']);
-        Route::put('/{id}', [\App\Http\Controllers\AuthorityController::class, 'updateAuthority']);
-        Route::delete('/{id}', [\App\Http\Controllers\AuthorityController::class, 'deleteAuthority']);
+        Route::get('create_form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityCreateForm']);
+        Route::group(['prefix' => '{id}'], function () {
+            Route::get('form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityForm']);
+            Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthority']);
+            Route::put('/', [\App\Http\Controllers\AuthorityController::class, 'updateAuthority']);
+            Route::delete('/', [\App\Http\Controllers\AuthorityController::class, 'deleteAuthority']);
+        });
     });
 
     Route::group(['prefix' => 'agents'], function () {

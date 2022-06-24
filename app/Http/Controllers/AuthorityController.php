@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AuthorityCollection;
+use App\Http\Resources\Forms\AuthorityResource;
 use App\Models\Authority;
 use App\Models\User;
 use Exception;
@@ -85,5 +86,21 @@ class AuthorityController extends Controller
         } catch (Exception $e) {
             return res('Authority could not be deleted', 400);
         }
+    }
+
+    public function getAuthorityForm(Request $request, $id): JsonResponse
+    {
+        $authority = Authority::query()->find($id);
+        if (!$authority) {
+            return res('Authority not found', 404);
+        }
+
+        return res(new AuthorityResource($authority));
+    }
+
+    public function getAuthorityCreateForm(Request $request): JsonResponse
+    {
+        $newAuthority = new Authority();
+        return res(new AuthorityResource($newAuthority));
     }
 }
