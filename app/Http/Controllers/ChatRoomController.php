@@ -54,7 +54,7 @@ class ChatRoomController extends Controller
         ]);
 
         broadcast(new NewChatMessage($user, $message))->toOthers();
-        broadcast(new NewNotification($user, ['lole' => 1]))->toOthers();
+        event(new NewNotification($user, ['asd'=> 1]));
 
         return res($message);
     }
