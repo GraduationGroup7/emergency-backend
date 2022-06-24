@@ -67,6 +67,12 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::group(['prefix' => 'customers'], function () {
         Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomers']);
+        Route::get('create_form', [\App\Http\Controllers\CustomerController::class, 'getCustomerCreateForm']);
+        Route::group(['prefix' => '{id}'], function () {
+            Route::get('form', [\App\Http\Controllers\CustomerController::class, 'getCustomerForm']);
+            Route::put('/', [\App\Http\Controllers\CustomerController::class, 'updateCustomer']);
+            Route::delete('/', [\App\Http\Controllers\CustomerController::class, 'deleteCustomer']);
+        });
     });
 
     Route::group(['prefix' => 'emergencies'], function () {
@@ -96,6 +102,7 @@ Route::middleware('auth:sanctum')->group(function() {
     // route group for pusher
     Route::group(['prefix' => 'pusher'], function () {
         Route::post('auth', [\App\Http\Controllers\PusherController::class, 'auth']);
+        Route::post('notifications/auth', [\App\Http\Controllers\PusherController::class, 'notificationsAuth']);
     });
 
     Route::middleware([\App\Http\Middleware\ProtectAdmin::class])->prefix('admin')->group(function () {
