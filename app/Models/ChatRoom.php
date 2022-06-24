@@ -15,6 +15,10 @@ class ChatRoom extends Model
 
     use HasFactory;
 
+    public function getEmergency() : Emergency {
+        return Emergency::find($this->emergency_id);
+    }
+
     public function getMessages($limit=25): Collection|array
     {
         return ChatMessage::query()

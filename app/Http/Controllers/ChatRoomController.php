@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Enum\UserTypeEnum;
 use App\Events\NewChatMessage;
 use App\Events\NewNotification;
+use App\Models\Agent;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
+use App\Models\Customer;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\User;
@@ -54,7 +56,9 @@ class ChatRoomController extends Controller
         ]);
 
         broadcast(new NewChatMessage($user, $message))->toOthers();
-        event(new NewNotification($user, ['asd'=> 1]));
+
+        $notifyUser = $this->getChatRoomRespondentId($chatRoom, $user);
+        event(new NewNotification($notifyUser, ['message' => 'You received a new message']));
 
         return res($message);
     }
@@ -101,5 +105,14 @@ class ChatRoomController extends Controller
         }
 
         return true;
+    }
+
+    private function getChatRoomRespondentId(ChatRoom $chatRoom, User $user) : User {
+        $emergency = $chatRoom->getEmergency();
+        if($user->type == 'user') {
+            return User::find(Agent::find(EmergencyAgent::query()->where('emergency_id', $emergency->id)->first()->agent_id)->user_id);
+        } else {
+            return User::find(Customer::find($emergency->reporting_customer_id)->user_id);
+        }
     }
 }
