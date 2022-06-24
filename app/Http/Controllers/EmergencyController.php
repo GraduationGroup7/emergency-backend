@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\EmergencyCollection;
+use App\Http\Resources\Forms\EmergencyResource;
 use App\Models\Agent;
 use App\Models\ChatRoom;
 use App\Models\Customer;
@@ -335,5 +336,21 @@ class EmergencyController extends Controller
         ]);
 
         return res('Emergency updated');
+    }
+
+    public function getEmergencyForm(Request $request, $id): JsonResponse
+    {
+        $emergency = Emergency::find($id);
+        if (!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        return res(new EmergencyResource($emergency));
+    }
+
+    public function getEmergencyCreateForm(Request $request): JsonResponse
+    {
+        $emergency = new Emergency();
+        return res(new EmergencyResource($emergency));
     }
 }

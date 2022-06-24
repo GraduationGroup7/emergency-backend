@@ -61,9 +61,9 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('create_form', [\App\Http\Controllers\AgentController::class, 'getAgentCreateForm']);
         Route::group(['prefix' => '{id}'], function () {
             Route::get('form', [\App\Http\Controllers\AgentController::class, 'getAgentForm']);
-            Route::get('{id}', [\App\Http\Controllers\AgentController::class, 'getAgent']);
-            Route::put('{id}', [\App\Http\Controllers\AgentController::class, 'updateAgent']);
-            Route::delete('{id}', [\App\Http\Controllers\AgentController::class, 'deleteAgent']);
+            Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgent']);
+            Route::put('/', [\App\Http\Controllers\AgentController::class, 'updateAgent']);
+            Route::delete('/', [\App\Http\Controllers\AgentController::class, 'deleteAgent']);
         });
 
         Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgents']);
@@ -83,15 +83,17 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::group(['prefix' => 'emergencies'], function () {
         Route::get('archival', [\App\Http\Controllers\EmergencyController::class, 'getArchivalEmergencies']);
         Route::post('merge', [\App\Http\Controllers\EmergencyController::class, 'mergeEmergencies']);
+        Route::get('create_form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyCreateForm']);
         Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
         Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
 
         Route::group(['prefix' => '{id}'], function () {
-            Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
-            Route::put('/', [\App\Http\Controllers\EmergencyController::class, 'updateEmergency']);
+            Route::get('form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyForm']);
             Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
             Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
             Route::get('chat_room', [\App\Http\Controllers\EmergencyController::class, 'getChatRoom']);
+            Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
+            Route::put('/', [\App\Http\Controllers\EmergencyController::class, 'updateEmergency']);
         });
     });
 
