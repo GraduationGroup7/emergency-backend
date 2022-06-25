@@ -6,8 +6,10 @@ use App\Http\Resources\CustomerCollection;
 use App\Http\Resources\Forms\CustomerResource;
 use App\Models\Customer;
 use App\Models\User;
+use AWS\CRT\Log;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -55,5 +57,27 @@ class CustomerController extends Controller
         ]);
 
         return res($customer);
+    }
+
+    public function deleteCustomer(Request $request, $id): JsonResponse
+    {
+        $customer = Customer::find($id);
+        if(!$customer) {
+            return res('Customer not found', 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $user = User::query()->find($customer->user_id);
+            $user->delete();
+            $customer->delete();
+
+            DB::commit();
+            return res('Customer deleted successfully');
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            \Illuminate\Support\Facades\Log::info($exception->getMessage());
+            return res('Customer could not be deleted', 500);
+        }
     }
 }
