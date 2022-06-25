@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotification;
 use App\Http\Resources\EmergencyCollection;
 use App\Http\Resources\Forms\EmergencyResource;
 use App\Models\Agent;
@@ -12,6 +13,7 @@ use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\EmergencyFile;
 use App\Models\EmergencyType;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
@@ -134,10 +136,21 @@ class EmergencyController extends Controller
 
                 if($emergencyAgent) continue;
 
+                // Assign agent to emergency
                 EmergencyAgent::query()->create([
                     'emergency_id' => $emergency->id,
                     'agent_id' => $agent->id,
                 ]);
+                // create the notification for the user
+                $user = User::find($agent->user_id);
+                event(new NewNotification($user, [
+                    'payload' => [
+                        'emergency_id' => $emergency->id,
+                        'message' => 'You have been assigned to an emergency',
+                    ],
+                    'type' => 'assigned-to-emergency',
+                    'title' => 'Assigned to Emergency',
+                ]));
             }
 
             DB::commit();
