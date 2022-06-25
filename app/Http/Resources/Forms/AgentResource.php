@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Forms;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AgentResource extends JsonResource
@@ -40,6 +41,13 @@ class AgentResource extends JsonResource
                 'title' => 'Last Name',
                 'field' => 'last_name',
                 'value' => $this->last_name,
+                'type' => 'text',
+                'disabled' => false,
+            ],
+            [
+                'title' => 'Phone Number',
+                'field' => 'phone_number',
+                'value' => User::find($this->user_id)->phone_number,
                 'type' => 'text',
                 'disabled' => false,
             ],

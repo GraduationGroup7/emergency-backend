@@ -47,6 +47,10 @@ class AuthorityController extends Controller
         }
 
         $authority->update($request->all());
+        User::find($authority->user_id)->update([
+            'phone_number' => $request->phone_number,
+        ]);
+
         return res($authority);
     }
 

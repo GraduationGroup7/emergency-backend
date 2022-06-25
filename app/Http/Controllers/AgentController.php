@@ -41,6 +41,10 @@ class AgentController extends Controller
             return res('Agent not found', 404);
         }
         $agent->update($request->all());
+        $user = User::find($agent->user_id)->update([
+            'phone_number' => $request->phone_number,
+        ]);
+
         return res($agent);
     }
 

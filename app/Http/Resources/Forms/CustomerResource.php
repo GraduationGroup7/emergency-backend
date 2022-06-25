@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Forms;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CustomerResource extends JsonResource
@@ -45,10 +46,31 @@ class CustomerResource extends JsonResource
                 'disabled' => false,
             ],
             [
+                'title' => 'Phone Number',
+                'field' => 'phone_number',
+                'value' => User::find($this->user_id)->phone_number,
+                'type' => 'text',
+                'disabled' => false,
+            ],
+            [
                 'title' => 'Verified',
                 'field' => 'verified',
                 'value' => $this->verified,
                 'type' => 'checkbox',
+                'disabled' => false,
+            ],
+            [
+                'title' => 'Created At',
+                'field' => 'created_at',
+                'value' => $this->created_at,
+                'type' => 'date',
+                'disabled' => false,
+            ],
+            [
+                'title' => 'Updated At',
+                'field' => 'updated_at',
+                'value' => $this->updated_at,
+                'type' => 'date',
                 'disabled' => false,
             ],
         ];
