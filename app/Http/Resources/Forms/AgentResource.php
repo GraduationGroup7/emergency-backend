@@ -15,6 +15,7 @@ class AgentResource extends JsonResource
      */
     public function toArray($request)
     {
+        $user = User::find($this->user_id);
         return [
             [
                 'title' => 'ID',
@@ -29,6 +30,20 @@ class AgentResource extends JsonResource
                 'value' => $this->user_id,
                 'type' => 'number',
                 'disabled' => true,
+            ],
+            [
+                'title' => 'Email',
+                'field' => 'email',
+                'value' => $user?->email,
+                'type' => 'number',
+                'disabled' => true,
+            ],
+            [
+                'title' => 'Password',
+                'field' => 'password',
+                'value' => '',
+                'type' => 'password',
+                'disabled' => $user?->password,
             ],
             [
                 'title' => 'First Name',
@@ -47,7 +62,7 @@ class AgentResource extends JsonResource
             [
                 'title' => 'Phone Number',
                 'field' => 'phone_number',
-                'value' => User::find($this->user_id)?->phone_number,
+                'value' => $user?->phone_number,
                 'type' => 'text',
                 'disabled' => false,
             ],

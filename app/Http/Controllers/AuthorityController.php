@@ -134,4 +134,34 @@ class AuthorityController extends Controller
             return res('Authorities could not be deleted', 400);
         }
     }
+
+    public function createAuthorityFromForm(Request $request) {
+        $validator = validator($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone_number' => 'required|string',
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return res($validator->errors(), 400);
+        }
+
+        $user = User::query()->create([
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'type' => 'authority',
+            'phone_number' => $request->phone_number,
+        ]);
+
+        $authority = Authority::query()->create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'user_id' => $user->id,
+        ]);
+
+        return res($authority);
+    }
 }
