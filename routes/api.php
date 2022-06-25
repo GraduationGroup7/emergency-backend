@@ -41,71 +41,6 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('emergencies', [\App\Http\Controllers\EmergencyController::class, 'getEmergenciesForUser']);
     });
 
-        Route::group(['prefix' => 'emergency_types'], function () {
-        Route::get('/', [\App\Http\Controllers\EmergencyTypeController::class, 'getEmergencyTypes']);
-        Route::post('/', [\App\Http\Controllers\EmergencyTypeController::class, 'createEmergencyType']);
-        Route::group(['prefix' => '{id}'], function () {
-            Route::get('/', [\App\Http\Controllers\EmergencyTypeController::class, 'getEmergencyType']);
-            Route::put('/', [\App\Http\Controllers\EmergencyTypeController::class, 'updateEmergencyType']);
-            Route::delete('/', [\App\Http\Controllers\EmergencyTypeController::class, 'deleteEmergencyType']);
-        });
-    });
-
-    Route::group(['prefix' => 'authorities'], function () {
-        Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthorities']);
-        Route::get('create_form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityCreateForm']);
-        Route::group(['prefix' => '{id}'], function () {
-            Route::get('form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityForm']);
-            Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthority']);
-            Route::put('/', [\App\Http\Controllers\AuthorityController::class, 'updateAuthority']);
-            Route::delete('/', [\App\Http\Controllers\AuthorityController::class, 'deleteAuthority']);
-        });
-    });
-
-    Route::group(['prefix' => 'agents'], function () {
-        Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
-        Route::get('create_form', [\App\Http\Controllers\AgentController::class, 'getAgentCreateForm']);
-        Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
-        Route::group(['prefix' => '{id}'], function () {
-            Route::get('form', [\App\Http\Controllers\AgentController::class, 'getAgentForm']);
-            Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgent']);
-            Route::put('/', [\App\Http\Controllers\AgentController::class, 'updateAgent']);
-            Route::delete('/', [\App\Http\Controllers\AgentController::class, 'deleteAgent']);
-        });
-
-        Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgents']);
-        Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgent']);
-    });
-
-    Route::group(['prefix' => 'customers'], function () {
-        Route::get('create_form', [\App\Http\Controllers\CustomerController::class, 'getCustomerCreateForm']);
-        Route::group(['prefix' => '{id}'], function () {
-            Route::get('form', [\App\Http\Controllers\CustomerController::class, 'getCustomerForm']);
-            Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomer']);
-            Route::put('/', [\App\Http\Controllers\CustomerController::class, 'updateCustomer']);
-            Route::delete('/', [\App\Http\Controllers\CustomerController::class, 'deleteCustomer']);
-        });
-        Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomers']);
-    });
-
-    Route::group(['prefix' => 'emergencies'], function () {
-        Route::get('archival', [\App\Http\Controllers\EmergencyController::class, 'getArchivalEmergencies']);
-        Route::post('merge', [\App\Http\Controllers\EmergencyController::class, 'mergeEmergencies']);
-        Route::get('create_form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyCreateForm']);
-        Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
-        Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
-
-        Route::group(['prefix' => '{id}'], function () {
-            Route::get('all', [\App\Http\Controllers\EmergencyController::class, 'getAllEmergencyData']);
-            Route::get('form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyForm']);
-            Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
-            Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
-            Route::get('chat_room', [\App\Http\Controllers\EmergencyController::class, 'getChatRoom']);
-            Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
-            Route::put('/', [\App\Http\Controllers\EmergencyController::class, 'updateEmergency']);
-        });
-    });
-
     Route::group(['prefix' => 'chat_rooms'], function () {
         Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getAllChatRooms']);
         Route::group(['prefix' => '{id}'], function () {
@@ -115,14 +50,78 @@ Route::middleware('auth:sanctum')->group(function() {
         });
     });
 
-    // route group for pusher
     Route::group(['prefix' => 'pusher'], function () {
         Route::post('auth', [\App\Http\Controllers\PusherController::class, 'auth']);
         Route::post('notifications/auth', [\App\Http\Controllers\PusherController::class, 'notificationsAuth']);
     });
 
-    Route::middleware([\App\Http\Middleware\ProtectAdmin::class])->prefix('admin')->group(function () {
-        Route::get('tables', [\App\Http\Controllers\AdminController::class, 'getTableRoutes']);
+    // Admin and Authority Accessible Routes
+    Route::middleware([\App\Http\Middleware\AllowAdminAndAuthority::class])->group(function () {
+        Route::group(['prefix' => 'emergencies'], function () {
+            Route::get('archival', [\App\Http\Controllers\EmergencyController::class, 'getArchivalEmergencies']);
+            Route::post('merge', [\App\Http\Controllers\EmergencyController::class, 'mergeEmergencies']);
+            Route::get('create_form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyCreateForm']);
+            Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
+            Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
+
+            Route::group(['prefix' => '{id}'], function () {
+                Route::get('all', [\App\Http\Controllers\EmergencyController::class, 'getAllEmergencyData']);
+                Route::get('form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyForm']);
+                Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
+                Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
+                Route::get('chat_room', [\App\Http\Controllers\EmergencyController::class, 'getChatRoom']);
+                Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
+                Route::put('/', [\App\Http\Controllers\EmergencyController::class, 'updateEmergency']);
+            });
+        });
+
+        Route::group(['prefix' => 'agents'], function () {
+            Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
+            Route::get('create_form', [\App\Http\Controllers\AgentController::class, 'getAgentCreateForm']);
+            Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
+            Route::group(['prefix' => '{id}'], function () {
+                Route::get('form', [\App\Http\Controllers\AgentController::class, 'getAgentForm']);
+                Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgent']);
+                Route::put('/', [\App\Http\Controllers\AgentController::class, 'updateAgent']);
+                Route::delete('/', [\App\Http\Controllers\AgentController::class, 'deleteAgent']);
+            });
+
+            Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgents']);
+            Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgent']);
+        });
+    });
+
+    // Routes only accessible by Admin
+    Route::middleware([\App\Http\Middleware\ProtectAdmin::class])->group(function () {
+        Route::group(['prefix' => 'authorities'], function () {
+            Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthorities']);
+            Route::get('create_form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityCreateForm']);
+            Route::group(['prefix' => '{id}'], function () {
+                Route::get('form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityForm']);
+                Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthority']);
+                Route::put('/', [\App\Http\Controllers\AuthorityController::class, 'updateAuthority']);
+                Route::delete('/', [\App\Http\Controllers\AuthorityController::class, 'deleteAuthority']);
+            });
+        });
+
+        Route::group(['prefix' => 'chat_rooms'], function () {
+            Route::get('/', [\App\Http\Controllers\ChatRoomController::class, 'getAllChatRooms']);
+        });
+
+        Route::group(['prefix' => 'customers'], function () {
+            Route::get('create_form', [\App\Http\Controllers\CustomerController::class, 'getCustomerCreateForm']);
+            Route::group(['prefix' => '{id}'], function () {
+                Route::get('form', [\App\Http\Controllers\CustomerController::class, 'getCustomerForm']);
+                Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomer']);
+                Route::put('/', [\App\Http\Controllers\CustomerController::class, 'updateCustomer']);
+                Route::delete('/', [\App\Http\Controllers\CustomerController::class, 'deleteCustomer']);
+            });
+            Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomers']);
+        });
+
+        Route::group(['prefix' => 'admin'], function () {
+            Route::get('tables', [\App\Http\Controllers\AdminController::class, 'getTableRoutes']);
+        });
     });
 });
 
