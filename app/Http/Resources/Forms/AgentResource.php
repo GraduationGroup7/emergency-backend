@@ -47,7 +47,7 @@ class AgentResource extends JsonResource
             [
                 'title' => 'Phone Number',
                 'field' => 'phone_number',
-                'value' => User::find($this->user_id)->phone_number,
+                'value' => User::find($this->user_id)?->phone_number,
                 'type' => 'text',
                 'disabled' => false,
             ],
