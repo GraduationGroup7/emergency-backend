@@ -6,11 +6,14 @@ use App\Http\Resources\AgentCollection;
 use App\Http\Resources\AgentResource;
 use App\Models\Agent;
 use App\Models\Emergency;
+use App\Models\EmergencyAgent;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AgentController extends Controller
 {
@@ -111,5 +114,21 @@ class AgentController extends Controller
     {
         $agent = new Agent();
         return res(new \App\Http\Resources\Forms\AgentResource($agent));
+    }
+
+    public function getAgentChatRooms(Request $request): JsonResponse
+    {
+        Log::info('user id ' . Auth::user()->id);
+        $agent = Agent::where('user_id', Auth::user()->id)->first();
+        Log::info('AGENT ' . json_encode($agent));
+        if(!$agent) {
+            return res('Agent not found', 404);
+        }
+
+        return res(EmergencyAgent::query()
+            ->select('chat_rooms.id as chat_room_id', 'emergencies.*')
+            ->join('emergencies', 'emergencies.id', '=', 'emergency_agents.emergency_id')
+            ->join('chat_rooms', 'chat_rooms.emergency_id', '=', 'emergencies.id')
+            ->where('emergency_agents.agent_id', $agent->id)->get());
     }
 }

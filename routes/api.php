@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::group(['prefix' => 'agents'], function () {
         Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
         Route::get('create_form', [\App\Http\Controllers\AgentController::class, 'getAgentCreateForm']);
+        Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
         Route::group(['prefix' => '{id}'], function () {
             Route::get('form', [\App\Http\Controllers\AgentController::class, 'getAgentForm']);
             Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgent']);
