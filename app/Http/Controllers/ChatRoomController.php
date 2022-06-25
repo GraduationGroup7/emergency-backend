@@ -58,7 +58,7 @@ class ChatRoomController extends Controller
         broadcast(new NewChatMessage($user, $message))->toOthers();
 
         $notifyUser = $this->getChatRoomRespondentId($chatRoom, $user);
-        event(new NewNotification($notifyUser, ['payload' => ['message' => $request->message, 'user' => $user], 'type' => 'chatroom-message' ]));
+        event(new NewNotification($notifyUser, ['payload' => ['message' => $request->message, 'user' => $user], 'type' => 'chatroom-message', 'title' => 'New Chatroom Message' ]));
 
         return res($message);
     }
