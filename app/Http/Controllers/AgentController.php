@@ -95,9 +95,16 @@ class AgentController extends Controller
             ->where('completed', false);
 
         $availableAgents = Agent::query()
+            ->select(
+                'agents.*',
+                'agent_types.name as agent_type_name',
+                'users.phone_number as phone_number'
+            )
             ->leftJoinSub($occupiedAgents, 'occupied_agents', function ($join) {
                 $join->on('agents.id', '=', 'occupied_agents.agent_id');
             })
+            ->join('agent_types', 'agents.agent_type_id', '=', 'agent_types.id')
+            ->join('users', 'agents.user_id', '=', 'users.id')
             ->where('occupied_agents.agent_id', null)
             ->paginate($request->input('per_page', 15));
 
