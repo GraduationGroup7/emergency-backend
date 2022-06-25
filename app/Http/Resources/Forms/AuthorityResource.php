@@ -36,7 +36,7 @@ class AuthorityResource extends JsonResource
                 'field' => 'email',
                 'value' => $user?->email,
                 'type' => 'number',
-                'disabled' => true,
+                'disabled' => !!$user?->email,
             ],
             [
                 'title' => 'Password',
