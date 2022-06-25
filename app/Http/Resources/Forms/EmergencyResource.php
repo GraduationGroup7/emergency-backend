@@ -76,7 +76,7 @@ class EmergencyResource extends JsonResource
                 'title' => 'Completed',
                 'field' => 'completed',
                 'value' => $this->completed,
-                'type' => 'boolean',
+                'type' => 'checkbox',
                 'disabled' => false,
             ],
 
@@ -84,7 +84,7 @@ class EmergencyResource extends JsonResource
                 'title' => 'Is Active',
                 'field' => 'is_active',
                 'value' => $this->is_active,
-                'type' => 'boolean',
+                'type' => 'checkbox',
                 'disabled' => false,
             ],
         ];
