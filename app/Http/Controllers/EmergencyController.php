@@ -376,6 +376,7 @@ class EmergencyController extends Controller
             'emergency_files' => $emergencyFiles->toArray(),
             'chat_room' => $chatRoom?->toArray(),
             'emergency_types' => $emergencyTypes->toArray(),
+            'available_statuses' => [Emergency::STATUS_PENDING, Emergency::STATUS_ABANDONED, Emergency::STATUS_COMPLETED],
             'reporting_customer' => $reportingCustomer->toArray(),
             'approving_authority' => $approvingAuthority?->toArray(),
         ]);
