@@ -7,6 +7,7 @@ use App\Http\Resources\EmergencyCollection;
 use App\Http\Resources\Forms\EmergencyResource;
 use App\Models\Agent;
 use App\Models\Authority;
+use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\Customer;
 use App\Models\Emergency;
@@ -395,5 +396,37 @@ class EmergencyController extends Controller
             'reporting_customer' => $reportingCustomer->toArray(),
             'approving_authority' => $approvingAuthority?->toArray(),
         ]);
+    }
+
+    public function deleteEmergency(Request $request, $id) {
+        $emergency = Emergency::query()->find($id);
+        if (!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Delete the emergency agents
+            EmergencyAgent::query()->where('emergency_id', $id)->delete();
+            // Delete the chatroom messages and the chat room for the emergency chat room
+            $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
+            if($chatRoom) {
+                ChatMessage::query()->where('chat_room_id', $chatRoom->id)->delete();
+                $chatRoom->delete();
+            }
+
+            // Delete the emergency files
+            EmergencyFile::query()->where('emergency_id', $id)->delete();
+
+            // Delete the emergency
+            $emergency->delete();
+
+            DB::commit();
+            return res('Emergency deleted');
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::info($exception->getMessage());
+            return res('Emergency could not be deleted', 500);
+        }
     }
 }

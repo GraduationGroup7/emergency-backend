@@ -72,6 +72,7 @@ Route::middleware('auth:sanctum')->group(function() {
                 Route::get('chat_room', [\App\Http\Controllers\EmergencyController::class, 'getChatRoom']);
                 Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
                 Route::put('/', [\App\Http\Controllers\EmergencyController::class, 'updateEmergency']);
+                Route::delete('/', [\App\Http\Controllers\EmergencyController::class, 'deleteEmergency']);
             });
         });
 
