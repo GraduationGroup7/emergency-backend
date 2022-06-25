@@ -481,7 +481,7 @@ class EmergencyController extends Controller
 
     public function getEmergencyTypes(Request $request): JsonResponse
     {
-        $emergencyTypes = EmergencyType::all()->where('name', '!=', 'Test');
+        $emergencyTypes = EmergencyType::query()->where('name', '!=', 'Test')->get()->toArray();
         return res($emergencyTypes);
     }
 }
