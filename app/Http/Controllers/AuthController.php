@@ -20,10 +20,14 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
             'password' => 'required|string',
         ]);
+
+        if($validator->fails()) {
+            return res('Incorrect username or password', 400);
+        }
 
         $credentials = request(['email','password']);
 
