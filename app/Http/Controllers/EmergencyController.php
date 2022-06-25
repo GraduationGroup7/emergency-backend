@@ -316,6 +316,8 @@ class EmergencyController extends Controller
             )
             ->join('chat_rooms', 'emergencies.id', '=', 'chat_rooms.emergency_id')
             ->where('reporting_customer_id', $customer->id)
+            ->where('completed', false)
+            ->where('is_active', true)
             ->get();
 
         return res($emergencies);
