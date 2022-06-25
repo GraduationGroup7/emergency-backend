@@ -55,6 +55,10 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('notifications/auth', [\App\Http\Controllers\PusherController::class, 'notificationsAuth']);
     });
 
+    Route::group(['prefix' => 'emergencies'], function () {
+        Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
+    });
+
     // Admin and Authority Accessible Routes
     Route::middleware([\App\Http\Middleware\AllowAdminAndAuthority::class])->group(function () {
         Route::group(['prefix' => 'emergencies'], function () {
@@ -63,7 +67,6 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get('create_form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyCreateForm']);
             Route::post('bulk_delete', [\App\Http\Controllers\EmergencyController::class, 'bulkDeleteEmergencies']);
             Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
-            Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
 
             Route::group(['prefix' => '{id}'], function () {
                 Route::get('all', [\App\Http\Controllers\EmergencyController::class, 'getAllEmergencyData']);
