@@ -7,6 +7,7 @@ use App\Http\Resources\EmergencyCollection;
 use App\Http\Resources\Forms\EmergencyResource;
 use App\Models\Agent;
 use App\Models\Authority;
+use App\Models\AuthorityType;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\Customer;
@@ -28,7 +29,19 @@ class EmergencyController extends Controller
 {
     public function getEmergencies(Request $request): EmergencyCollection
     {
-        return new EmergencyCollection(kaantable(Emergency::query(), $request));
+        $user = User::find(Auth::user()->id);
+
+        $emergencies = Emergency::query()
+            ->join('emergency_types', 'emergencies.emergency_type_id', '=', 'emergency_types.id')
+            ->where(function ($query) use ($user) {
+                if($user->type === 'authority') {
+                    $authority = Authority::query()->where('user_id', $user->id)->first();
+                    $authorityType = AuthorityType::find($authority->authority_type_id);
+                    $query->where('emergency_types.name', $authorityType->name);
+                }
+            });
+
+        return new EmergencyCollection(kaantable($emergencies, $request));
     }
 
     public function getEmergency(Request $request, int $id): JsonResponse
