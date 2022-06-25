@@ -25,14 +25,14 @@ class EmergencyResource extends JsonResource
             [
                 'title' => 'Reporting Customer ID',
                 'field' => 'reporting_customer_id',
-                'value' => $this->reported_customer_id,
+                'value' => $this->reporting_customer_id,
                 'type' => 'number',
                 'disabled' => true,
             ],
             [
                 'title' => 'Approving Agent ID',
                 'field' => 'approving_authority_id',
-                'value' => $this->approving_agent_id,
+                'value' => $this->approving_authority_id,
                 'type' => 'number',
                 'disabled' => true,
             ],
