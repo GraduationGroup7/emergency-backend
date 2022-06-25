@@ -15,6 +15,16 @@ class CustomerController extends Controller
         return new CustomerCollection(kaantable(Customer::query(), $request));
     }
 
+    public function getCustomer($id): JsonResponse
+    {
+        $customer = Customer::find($id);
+        if(!$customer)
+        {
+            return res('Customer not found', 404);
+        }
+        return res($customer);
+    }
+
     public function getCustomerForm(Request $request, $id): JsonResponse
     {
         $customer = Customer::query()->find($id);
