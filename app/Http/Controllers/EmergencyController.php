@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\EmergencyCollection;
 use App\Http\Resources\Forms\EmergencyResource;
 use App\Models\Agent;
+use App\Models\Authority;
 use App\Models\ChatRoom;
 use App\Models\Customer;
 use App\Models\Emergency;
@@ -365,6 +366,8 @@ class EmergencyController extends Controller
         $emergencyTypes = EmergencyType::all();
         $emergencyAgents = EmergencyAgent::query()->where('emergency_id', $id)->get();
         $emergencyFiles = EmergencyFile::query()->where('emergency_id', $id)->get();
+        $reportingCustomer = Customer::query()->find($emergency->reporting_customer_id);
+        $approvingAuthority = Authority::query()->find($emergency->approving_authority_id);
         $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
 
         return res ([
@@ -373,6 +376,8 @@ class EmergencyController extends Controller
             'emergency_files' => $emergencyFiles->toArray(),
             'chat_room' => $chatRoom?->toArray(),
             'emergency_types' => $emergencyTypes->toArray(),
+            'reporting_customer' => $reportingCustomer->toArray(),
+            'approving_authority' => $approvingAuthority?->toArray(),
         ]);
     }
 }
