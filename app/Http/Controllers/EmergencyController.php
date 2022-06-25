@@ -478,4 +478,10 @@ class EmergencyController extends Controller
             return res('Emergencies could not be deleted', 500);
         }
     }
+
+    public function getEmergencyTypes(Request $request): JsonResponse
+    {
+        $emergencyTypes = EmergencyType::all();
+        return res($emergencyTypes);
+    }
 }

@@ -59,6 +59,10 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
     });
 
+    Route::group(['prefix' => 'emergency_types'], function () {
+        Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyTypes']);
+    });
+
     // Admin and Authority Accessible Routes
     Route::middleware([\App\Http\Middleware\AllowAdminAndAuthority::class])->group(function () {
         Route::group(['prefix' => 'emergencies'], function () {
