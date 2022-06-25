@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthorityController extends Controller
 {
@@ -106,5 +107,31 @@ class AuthorityController extends Controller
     {
         $newAuthority = new Authority();
         return res(new AuthorityResource($newAuthority));
+    }
+
+
+    public function deleteAuthorityById($id) {
+        $authority = Authority::find($id);
+        if(!$authority) throw new Exception('Authority not found');
+
+        $user = User::find($authority->user_id);
+        $authority->delete();
+        $user->delete();
+    }
+
+    public function bulkDeleteAuthorities(Request $request): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            foreach($request->ids as $authorityId) {
+                $this->deleteAuthorityById($authorityId);
+            }
+            DB::commit();
+            return res('Authorities deleted successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::info($e->getMessage());
+            return res('Authorities could not be deleted', 400);
+        }
     }
 }

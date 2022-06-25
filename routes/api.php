@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get('archival', [\App\Http\Controllers\EmergencyController::class, 'getArchivalEmergencies']);
             Route::post('merge', [\App\Http\Controllers\EmergencyController::class, 'mergeEmergencies']);
             Route::get('create_form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyCreateForm']);
+            Route::post('bulk_delete', [\App\Http\Controllers\EmergencyController::class, 'bulkDeleteEmergencies']);
             Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
             Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
 
@@ -80,6 +81,7 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
             Route::get('create_form', [\App\Http\Controllers\AgentController::class, 'getAgentCreateForm']);
             Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
+            Route::post('bulk_delete', [\App\Http\Controllers\AgentController::class, 'bulkDeleteAgents']);
             Route::group(['prefix' => '{id}'], function () {
                 Route::get('form', [\App\Http\Controllers\AgentController::class, 'getAgentForm']);
                 Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgent']);
@@ -97,6 +99,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['prefix' => 'authorities'], function () {
             Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthorities']);
             Route::get('create_form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityCreateForm']);
+            Route::post('bulk_delete', [\App\Http\Controllers\AuthorityController::class, 'bulkDeleteAuthorities']);
             Route::group(['prefix' => '{id}'], function () {
                 Route::get('form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityForm']);
                 Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthority']);
@@ -111,6 +114,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
         Route::group(['prefix' => 'customers'], function () {
             Route::get('create_form', [\App\Http\Controllers\CustomerController::class, 'getCustomerCreateForm']);
+            Route::post('bulk_delete', [\App\Http\Controllers\CustomerController::class, 'bulkDeleteCustomers']);
             Route::group(['prefix' => '{id}'], function () {
                 Route::get('form', [\App\Http\Controllers\CustomerController::class, 'getCustomerForm']);
                 Route::get('/', [\App\Http\Controllers\CustomerController::class, 'getCustomer']);

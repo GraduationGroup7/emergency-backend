@@ -429,4 +429,40 @@ class EmergencyController extends Controller
             return res('Emergency could not be deleted', 500);
         }
     }
+
+    private function deleteEmergencyById($id) {
+        $emergency = Emergency::query()->find($id);
+        if (!$emergency) throw new Exception('Emergency not found');
+
+        // Delete the emergency agents
+        EmergencyAgent::query()->where('emergency_id', $id)->delete();
+        // Delete the chatroom messages and the chat room for the emergency chat room
+        $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
+        if($chatRoom) {
+            ChatMessage::query()->where('chat_room_id', $chatRoom->id)->delete();
+            $chatRoom->delete();
+        }
+
+        // Delete the emergency files
+        EmergencyFile::query()->where('emergency_id', $id)->delete();
+
+        // Delete the emergency
+        $emergency->delete();
+    }
+
+    public function bulkDeleteEmergencies(Request $request) {
+        DB::beginTransaction();
+        try {
+            foreach ($request->ids as $emergencyId) {
+                $this->deleteEmergencyById($emergencyId);
+            }
+
+            DB::commit();
+            return res('emergencies deleted successfully');
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::info('Emergencies could not be deleted');
+            return res('Emergencies could not be deleted', 500);
+        }
+    }
 }

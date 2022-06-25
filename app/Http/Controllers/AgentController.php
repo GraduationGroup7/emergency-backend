@@ -139,4 +139,29 @@ class AgentController extends Controller
 
         return res($chat_rooms);
     }
+
+    public function deleteAgentById($id) {
+        $agent = Agent::find($id);
+        if(!$agent) throw new Exception('Agent not found');
+
+        $user = User::find($agent->user_id);
+        $agent->delete();
+        $user->delete();
+    }
+
+    public function bulkDeleteAgents(Request $request): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            foreach($request->ids as $agentId) {
+                $this->deleteAgentById($agentId);
+            }
+            DB::commit();
+            return res('Agents deleted successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::info($e->getMessage());
+            return res('Agents could not be deleted', 400);
+        }
+    }
 }

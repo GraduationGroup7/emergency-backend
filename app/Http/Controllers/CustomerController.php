@@ -6,10 +6,11 @@ use App\Http\Resources\CustomerCollection;
 use App\Http\Resources\Forms\CustomerResource;
 use App\Models\Customer;
 use App\Models\User;
-use AWS\CRT\Log;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use PHPUnit\Util\Exception;
 
 class CustomerController extends Controller
 {
@@ -76,8 +77,33 @@ class CustomerController extends Controller
             return res('Customer deleted successfully');
         } catch (\Exception $exception) {
             DB::rollBack();
-            \Illuminate\Support\Facades\Log::info($exception->getMessage());
+            Log::info($exception->getMessage());
             return res('Customer could not be deleted', 500);
+        }
+    }
+
+    public function deleteCustomerById($id) {
+        $customer = Customer::find($id);
+        if(!$customer) throw new Exception('Customer not found');
+
+        $user = User::find($customer->user_id);
+        $customer->delete();
+        $user->delete();
+    }
+
+    public function bulkDeleteCustomers(Request $request): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            foreach($request->ids as $customerId) {
+                $this->deleteCustomerById($customerId);
+            }
+            DB::commit();
+            return res('Customers deleted successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::info($e->getMessage());
+            return res('Customers could not be deleted', 400);
         }
     }
 }
