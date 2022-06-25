@@ -129,10 +129,14 @@ class AgentController extends Controller
             return res('Agent not found', 404);
         }
 
-        return res(EmergencyAgent::query()
+        $chat_rooms = EmergencyAgent::query()
             ->select('chat_rooms.id as chat_room_id', 'emergencies.*')
             ->join('emergencies', 'emergencies.id', '=', 'emergency_agents.emergency_id')
             ->join('chat_rooms', 'chat_rooms.emergency_id', '=', 'emergencies.id')
-            ->where('emergency_agents.agent_id', $agent->id)->get());
+            ->where('emergency_agents.agent_id', $agent->id)
+            ->where('emergencies.completed', false)
+            ->get();
+
+        return res($chat_rooms);
     }
 }
