@@ -23,7 +23,7 @@ class EmergencyCollection extends ResourceCollection
                 ],
                 [
                     'headerName' => 'Reported By User ID',
-                    'field' => 'reporting_user_id'
+                    'field' => 'reporting_customer_id'
                 ], [
                     'headerName' => 'Approved By Authority ID',
                     'field' => 'approving_authority_id'
