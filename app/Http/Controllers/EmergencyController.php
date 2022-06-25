@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\EmergencyFile;
+use App\Models\EmergencyType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
@@ -352,5 +353,26 @@ class EmergencyController extends Controller
     {
         $emergency = new Emergency();
         return res(new EmergencyResource($emergency));
+    }
+
+    public function getAllEmergencyData(Request $request, $id): JsonResponse
+    {
+        $emergency = Emergency::query()->find($id);
+        if (!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        $emergencyTypes = EmergencyType::all();
+        $emergencyAgents = EmergencyAgent::query()->where('emergency_id', $id)->get();
+        $emergencyFiles = EmergencyFile::query()->where('emergency_id', $id)->get();
+        $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
+
+        return res ([
+            'emergency' => $emergency->toArray(),
+            'assigned_agents' => $emergencyAgents->toArray(),
+            'emergency_files' => $emergencyFiles->toArray(),
+            'chat_room' => $chatRoom?->toArray(),
+            'emergency_types' => $emergencyTypes->toArray(),
+        ]);
     }
 }
