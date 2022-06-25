@@ -43,7 +43,7 @@ class AgentResource extends JsonResource
                 'field' => 'password',
                 'value' => '',
                 'type' => 'password',
-                'disabled' => $user?->password,
+                'disabled' => !!$user?->password,
             ],
             [
                 'title' => 'First Name',
