@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AgentCollection;
 use App\Http\Resources\AgentResource;
 use App\Models\Agent;
+use App\Models\AgentType;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\User;
@@ -51,7 +52,16 @@ class AgentController extends Controller
     public function createAgentRoute(Request $request): JsonResponse
     {
         try {
-         AgentController::createAgent($request->all());
+         $type = AgentType::query()->find($request->agent_type_id);
+         if(!$type)
+         {
+             return res('Agent type not found', 404);
+         }
+
+         $payload = $request->all();
+         $payload['agent_type_id'] = $type->id;
+
+         Agent::query()->create($payload);
          return res('Agent created');
         } catch (Exception $e) {
             Log::error($e->getMessage());
