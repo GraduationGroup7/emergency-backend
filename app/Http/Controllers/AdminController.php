@@ -41,8 +41,7 @@ class AdminController extends Controller
     public function takeProjectBackup(Request $request): JsonResponse
     {
         try {
-            Artisan::queue('backup:run', ['--disable-notifications' => true]);
-            Artisan::call('queue:work');
+            Artisan::call('backup:run', ['--disable-notifications' => true]);
             return res('Backup job has been dispatched');
         } catch (\Exception $exception) {
             return res($exception->getMessage(), 500);
