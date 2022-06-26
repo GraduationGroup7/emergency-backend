@@ -244,15 +244,16 @@ class AuthorityController extends Controller
         return res($messages);
     }
 
-    public function openChatRoom(Request $request) {
+    public function openChatRoom(Request $request): JsonResponse
+    {
         $user = User::find(Auth::user()->id);
         $agentUser = Agent::query()->find($request->agent_id);
 
-        AuthorityAgentChatRoom::query()->updateOrCreate([
+        $chatRoom = AuthorityAgentChatRoom::query()->updateOrCreate([
             'authority_user_id' => $user->id,
             'agent_user_id' => $agentUser->user_id,
         ]);
 
-        res('Chat room opened successfully');
+        return res($chatRoom);
     }
 }
