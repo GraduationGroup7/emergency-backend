@@ -66,7 +66,7 @@ class AuthController extends Controller
         }
 
 
-        $basic  = new \Vonage\Client\Credentials\Basic("47ac5dca", "CUcRGKKwEyqV0AlI");
+        $basic  = new \Vonage\Client\Credentials\Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
         $client = new \Vonage\Client(new \Vonage\Client\Credentials\Container($basic));
 
         try {
@@ -180,7 +180,7 @@ class AuthController extends Controller
                 'phone_number' => $request->phone_number,
             ]);
 
-            $basic  = new \Vonage\Client\Credentials\Basic("47ac5dca", "CUcRGKKwEyqV0AlI");
+            $basic  = new \Vonage\Client\Credentials\Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
             $client = new \Vonage\Client(new \Vonage\Client\Credentials\Container($basic));
 
             $phone_request = new \Vonage\Verify\Request($request->phone_number, "Emergency");
@@ -228,6 +228,31 @@ class AuthController extends Controller
         } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             return res('Could not get user', 500);
+        }
+    }
+
+    public function customer_ask_verification(Request $request): JsonResponse
+    {
+        $user = User::query()->find($request->id);
+        if(!$user) return res('User not found', 404);
+        if(!compareWithEnum($user->type, UserTypeEnum::USER)) return res('User is not a customer', 400);
+
+
+        try {
+            $basic  = new \Vonage\Client\Credentials\Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
+            $client = new \Vonage\Client(new \Vonage\Client\Credentials\Container($basic));
+
+            $phone_request = new \Vonage\Verify\Request($request->phone_number, "Emergency");
+            $response = $client->verify()->start($phone_request);
+
+            return res([
+                'user' => $user,
+                'token' => $user->createToken('Personal Access Token')->plainTextToken,
+                'request_id' => $response->getRequestId()
+            ]);
+        } catch (\Exception $exception) {
+            Log::info($exception->getMessage());
+            return res('Could not send verification request', 500);
         }
     }
 }

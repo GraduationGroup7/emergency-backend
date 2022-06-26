@@ -25,6 +25,7 @@ Route::group(['prefix' => 'auth'], function () {
     // For Regular Users
     Route::group(['prefix' => 'customer'], function () {
         Route::post('register', [\App\Http\Controllers\AuthController::class, 'customer_register']);
+        Route::post('ask_verification', [\App\Http\Controllers\AuthController::class, 'customer_ask_verification']);
         Route::post('verify', [\App\Http\Controllers\AuthController::class, 'verifyPhone']);
     });
 });
