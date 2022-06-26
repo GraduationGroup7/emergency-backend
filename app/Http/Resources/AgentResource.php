@@ -18,6 +18,7 @@ class AgentResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'first_name' => $this->first_name,
+            'type' => $this->type,
             'last_name' => $this->last_name,
             'created_at' => $this->created_at,
         ];

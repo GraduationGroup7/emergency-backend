@@ -24,10 +24,16 @@ class AgentCollection extends ResourceCollection
                 [
                     'headerName' => 'First Name',
                     'field' => 'first_name'
-                ], [
+                ],
+                [
                     'headerName' => 'Last Name',
                     'field' => 'last_name'
-                ], [
+                ],
+                [
+                    'headerName' => 'Type',
+                    'field' => 'type'
+                ],
+                [
                     'headerName' => 'Created At',
                     'field' => 'created_at'
                 ],

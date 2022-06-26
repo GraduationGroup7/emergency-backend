@@ -21,7 +21,11 @@ class AgentController extends Controller
 
     public function getAgents(Request $request)
     {
-        return new AgentCollection(kaantable(Agent::query(), $request));
+        $agents = Agent::query()
+            ->select('agents.*', 'agent_types.name as type')
+            ->join('agent_types', 'agent_types.id', '=', 'agents.agent_type_id');
+
+        return new AgentCollection(kaantable($agents, $request));
     }
 
     public function getAgent($id)
