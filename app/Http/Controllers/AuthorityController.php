@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AuthorityCollection;
 use App\Http\Resources\Forms\AuthorityResource;
 use App\Models\Authority;
+use App\Models\AuthorityType;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -152,20 +153,34 @@ class AuthorityController extends Controller
             return res($validator->errors(), 400);
         }
 
-        $user = User::query()->create([
-            'name' => $request->first_name . ' ' . $request->last_name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'type' => 'authority',
-            'phone_number' => $request->phone_number,
-        ]);
+        DB::beginTransaction();
+        try {
+            $type = AuthorityType::query()->find($request->type)->first();
+            if(!$type)
+            {
+                return res('Authority type not found', 404);
+            }
 
-        $authority = Authority::query()->create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'user_id' => $user->id,
-        ]);
+            $payload = $request->all();
+            $payload['authority_type_id'] = $type->id;
 
-        return res($authority);
+            $user = User::create([
+                'email' => $request->email,
+                'name' => $request->first_name . ' ' . $request->last_name,
+                'password' => $request->password,
+                'phone_number' => $request->phone_number,
+                'type' => 'authority'
+            ]);
+            $payload['user_id'] = $user->id;
+
+            Authority::query()->create($payload);
+
+            DB::beginTransaction();
+            return res('Authority created successfully');
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::info($exception->getMessage());
+            return res('Authority could not be created', 400);
+        }
     }
 }

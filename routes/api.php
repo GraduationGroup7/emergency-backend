@@ -112,11 +112,11 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthorities']);
             Route::get('create_form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityCreateForm']);
             Route::post('bulk_delete', [\App\Http\Controllers\AuthorityController::class, 'bulkDeleteAuthorities']);
+            Route::post('/', [\App\Http\Controllers\AuthorityController::class, 'createAuthorityFromForm']);
             Route::group(['prefix' => '{id}'], function () {
                 Route::get('form', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityForm']);
                 Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthority']);
                 Route::put('/', [\App\Http\Controllers\AuthorityController::class, 'updateAuthority']);
-                Route::post('/', [\App\Http\Controllers\AuthorityController::class, 'createAuthorityFromForm']);
                 Route::delete('/', [\App\Http\Controllers\AuthorityController::class, 'deleteAuthority']);
             });
         });
