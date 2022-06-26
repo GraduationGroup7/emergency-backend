@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Forms;
 
+use App\Models\AuthorityType;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,9 @@ class AuthorityResource extends JsonResource
     public function toArray($request)
     {
         $user = User::find($this->user_id);
+        $type = $this->authority_type_id ?
+            AuthorityType::query()->find($this->authority_type_id)->name : AuthorityType::query()->first()->id;
+        $types = AuthorityType::query()->select('id', 'name')->get()->toArray();
         return [
             [
                 'title' => 'ID',
@@ -65,6 +69,14 @@ class AuthorityResource extends JsonResource
                 'field' => 'phone_number',
                 'value' => $user?->phone_number,
                 'type' => 'text',
+                'disabled' => false,
+            ],
+            [
+                'title' => 'Type',
+                'field' => 'type',
+                'value' => $type,
+                'type' => 'select',
+                'options' => $types,
                 'disabled' => false,
             ],
             [
