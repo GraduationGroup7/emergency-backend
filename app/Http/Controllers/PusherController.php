@@ -18,7 +18,6 @@ class PusherController extends Controller
         $user = User::find(Auth::user()->id);
 
         if(explode('.', $request->channel_name)[0] == 'private-notification') {
-            Log::info('TESTINGA');
             return $this->notificationsAuth($request);
         }
 
