@@ -137,7 +137,8 @@ class AgentController extends Controller
         $occupiedAgents = Emergency::query()
             ->select('ea.agent_id as agent_id')
             ->join('emergency_agents as ea', 'ea.emergency_id', '=', 'emergencies.id')
-            ->where('completed', false);
+            ->where('completed', false)
+            ->where('is_active', true);
 
         $availableAgents = Agent::query()
             ->select(
