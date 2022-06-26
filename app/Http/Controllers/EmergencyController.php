@@ -485,7 +485,7 @@ class EmergencyController extends Controller
         }
 
        $emergency = EmergencyAgent::query()
-            ->select('emergencies.*', 'users.name', 'users.phone_number', 'emergency_types.name as emergency_type')
+            ->select('emergencies.*', 'users.name as reported_by', 'users.phone_number', 'emergency_types.name as emergency_type')
             ->join('emergencies', 'emergency_agents.emergency_id', '=', 'emergencies.id')
             ->join('emergency_types', 'emergencies.emergency_type_id', '=', 'emergency_types.id')
             ->join('users', 'emergencies.reporting_user_id', '=', 'users.id')
