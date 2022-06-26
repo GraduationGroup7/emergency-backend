@@ -15,7 +15,7 @@ class CreateEmergenciesTable extends Migration
     {
         Schema::create('emergencies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reporting_customer_id')->references('id')->on('customers');
+            $table->foreignId('reporting_user_id')->references('id')->on('users');
             $table->foreignId('approving_authority_id')->references('id')->on('authorities');
             $table->boolean('completed')->default(false);
             $table->double('latitude');
