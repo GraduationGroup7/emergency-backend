@@ -18,6 +18,7 @@ class AgentResource extends JsonResource
     {
         $user = User::find($this->user_id);
         $type = $this->agent_type_id ? AgentType::query()->find($this->agent_type_id)->name : null;
+        $types = AgentType::query()->select('name')->pluck('name')->toArray();
         return [
             [
                 'title' => 'ID',
@@ -65,7 +66,8 @@ class AgentResource extends JsonResource
                 'title' => 'Type',
                 'field' => 'type',
                 'value' => $type,
-                'type' => 'text',
+                'type' => 'select',
+                'options' => $types,
                 'disabled' => false,
             ],
             [
@@ -80,14 +82,14 @@ class AgentResource extends JsonResource
                 'field' => 'created_at',
                 'value' => $this->created_at,
                 'type' => 'date',
-                'disabled' => false,
+                'disabled' => true,
             ],
             [
                 'title' => 'Updated At',
                 'field' => 'updated_at',
                 'value' => $this->updated_at,
                 'type' => 'date',
-                'disabled' => false,
+                'disabled' => true,
             ],
         ];
     }
