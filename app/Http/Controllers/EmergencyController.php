@@ -41,7 +41,8 @@ class EmergencyController extends Controller
                 if($user->type === 'authority') {
                     $authority = Authority::query()->where('user_id', $user->id)->first();
                     $authorityType = AuthorityType::find($authority->authority_type_id);
-                    $query->where('emergency_types.name', $authorityType->name);
+                    $query->where('emergency_types.name', $authorityType->name)
+                        ->where('emergencies.is_active', true);
                 }
             });
 
