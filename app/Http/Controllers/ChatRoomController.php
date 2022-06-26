@@ -72,7 +72,8 @@ class ChatRoomController extends Controller
             return res('Chat room not found', 404);
         }
 
-        if(!$this->checkIfAuthorized($user, $chatRoom)) {
+        $chatRoomService = new ChatRoomService();
+        if(!$chatRoomService->checkIfAuthorized($user, $chatRoom)) {
             return res('Unauthorized', 401);
         }
 
@@ -87,24 +88,6 @@ class ChatRoomController extends Controller
             ->paginate($request->per_page ?? 25);
 
         return res($messages);
-    }
-
-    private function checkIfAuthorized(User $user, ChatRoom $chatRoom): bool
-    {
-        $emergency = Emergency::query()->find($chatRoom->emergency_id);
-        if(compareWithEnum($user->type, UserTypeEnum::USER)) {
-            Log::info('USER ID ' . $user->id . ' reporting_user_id ' . $emergency->reporting_user_id);
-            if($user->id != $emergency->reporting_user_id) return false;
-        }
-        else {
-            $agent = $user->getAgent();
-            $emergencyAgent = EmergencyAgent::query()->where('emergency_id', $emergency->id)
-                ->where('agent_id', $agent->id)->first();
-
-            if(!$emergencyAgent) return false;
-        }
-
-        return true;
     }
 
     private function getChatRoomRespondentId(ChatRoom $chatRoom, User $user) : User {

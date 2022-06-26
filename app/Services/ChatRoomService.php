@@ -7,6 +7,7 @@ use App\Models\ChatRoom;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class ChatRoomService
 {
@@ -14,8 +15,8 @@ class ChatRoomService
     {
         $emergency = Emergency::query()->find($chatRoom->emergency_id);
         if(compareWithEnum($user->type, UserTypeEnum::USER)) {
-            $customer = $user->getCustomer();
-            if(!$customer || $customer->id != $emergency->reporting_user_id) return false;
+            Log::info('USER ID ' . $user->id . ' reporting_user_id ' . $emergency->reporting_user_id);
+            if($user->id != $emergency->reporting_user_id) return false;
         }
         else {
             $agent = $user->getAgent();
