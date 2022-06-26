@@ -56,6 +56,13 @@ class AdminController extends Controller
         }
     }
 
+    public function getBackup(Request $request, $name): StreamedResponse
+    {
+        $fileName = 'Emergency-Graduation/' . $name;
+        $s3Service = new S3Service();
+        return $s3Service->getFile($fileName);
+    }
+
     public function getFileFromS3(Request $request): StreamedResponse
     {
         $fileName = $request->file_name;
