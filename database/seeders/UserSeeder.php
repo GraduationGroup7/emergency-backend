@@ -54,7 +54,7 @@ class UserSeeder extends Seeder
             'name' => 'Alan Agent',
             'email' => 'alan@agent.com',
             'password' => Hash::make('123123'),
-            'type' => 'user'
+            'type' => 'agent'
         ]);
         Agent::query()->updateOrCreate([
             'user_id' => $user->id
@@ -72,7 +72,7 @@ class UserSeeder extends Seeder
             'name' => 'Bashar Authority',
             'email' => 'bashar@authority.com',
             'password' => Hash::make('123123'),
-            'type' => 'user'
+            'type' => 'authority'
         ]);
         Authority::query()->updateOrCreate([
             'user_id' => $user->id
