@@ -13,6 +13,7 @@ class Authority extends Model
         'user_id',
         'first_name',
         'last_name',
+        'authority_type_id',
     ];
     use HasFactory;
 
