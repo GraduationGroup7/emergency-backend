@@ -491,14 +491,18 @@ class EmergencyController extends Controller
             ->where('emergencies.is_active', true)
             ->first();
 
-        $payload = $emergency->toArray();
-        $payload['files'] = EmergencyFile::query()
-            ->select(
-                'name',
-                DB::raw('CONCAT("emergencies/", emergency_id, "/get_file/", name) as url')
-            )
-            ->where('emergency_id', $payload['id'])->get()->toArray();
+        $payload = null;
+        if($emergency) {
+            $payload = $emergency->toArray();
+            $payload['files'] = EmergencyFile::query()
+                ->select(
+                    'name',
+                    DB::raw("CONCAT('emergencies/', emergency_id, '/get_file/', name) as url")
+                )
+                ->where('emergency_id', $payload['id'])->get()->toArray();
 
+        }
+        
         return res($payload);
     }
 }
