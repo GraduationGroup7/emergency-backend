@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminController extends Controller
@@ -47,7 +48,9 @@ class AdminController extends Controller
         try {
             Artisan::call('backup:run', ['--disable-notifications' => true]);
             $fileName = Carbon::now()->format('Y-m-d-H-i-s') . '.zip';
-            return res(['fileName' => $fileName]);
+            $files = Storage::disk('s3')->allFiles('Emergency-Graduation');
+
+            return res(['files' => $files]);
         } catch (\Exception $exception) {
             return res($exception->getMessage(), 500);
         }
