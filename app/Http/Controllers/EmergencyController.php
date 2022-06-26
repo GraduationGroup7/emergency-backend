@@ -502,7 +502,7 @@ class EmergencyController extends Controller
                 ->where('emergency_id', $payload['id'])->get()->toArray();
 
         }
-        
+
         return res($payload);
     }
 }
