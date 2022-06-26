@@ -77,17 +77,11 @@ class EmergencyController extends Controller
             return res($validator->errors(), 400);
         }
 
-        $customer = Customer::query()->where('user_id', $user->id)->first();
-        if(!$customer) {
-            return res('Customer not found', 404);
-        }
-        if(!$customer->verified) return res('Customer not verified', 400);
-
         try {
             DB::beginTransaction();
             // Create the emergency
             $payload = array_merge($request->all(), [
-                'reporting_user_id' => $customer->id,
+                'reporting_user_id' => $user->id,
             ]);
 
             $emergency = Emergency::query()->create($payload);
