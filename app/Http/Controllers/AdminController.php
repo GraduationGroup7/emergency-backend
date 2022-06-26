@@ -45,9 +45,9 @@ class AdminController extends Controller
     public function takeProjectBackup(Request $request): JsonResponse
     {
         try {
-            Log::info('BACKUP TIME ' . Carbon::now()->format('Y-m-d H-i-s'));
             Artisan::call('backup:run', ['--disable-notifications' => true]);
-            return res('Backup job has been dispatched');
+            $fileName = Carbon::now()->format('Y-m-d-H-i-s') . '.zip';
+            return res(['fileName' => $fileName]);
         } catch (\Exception $exception) {
             return res($exception->getMessage(), 500);
         }
