@@ -45,7 +45,8 @@ class ChatRoomController extends Controller
 
         if(!$chatRoom) return res('Chat room not found', 404);
 
-        if(!$this->checkIfAuthorized($user, $chatRoom)) {
+        $chatRoomService = new ChatRoomService();
+        if(!$chatRoomService->checkIfAuthorized($user, $chatRoom)) {
             return res('Unauthorized', 401);
         }
 
