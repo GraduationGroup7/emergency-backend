@@ -48,8 +48,9 @@ class AdminController extends Controller
         try {
             Artisan::call('backup:run', ['--disable-notifications' => true]);
             $files = Storage::disk('s3')->allFiles('Emergency-Graduation');
+            $fileName = explode($files[count($files) - 1], '/')[1];
 
-            return res(['fileName' => $files[count($files) - 1]]);
+            return res(['fileName' => $fileName]);
         } catch (\Exception $exception) {
             return res($exception->getMessage(), 500);
         }
