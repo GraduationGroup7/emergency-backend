@@ -40,6 +40,10 @@ class EmergencyCollection extends ResourceCollection
                     'field' => 'completed'
                 ],
                 [
+                    'headerName' => 'Status',
+                    'field' => 'status'
+                ],
+                [
                     'headerName' => 'Reported At',
                     'field' => 'created_at'
                 ],
