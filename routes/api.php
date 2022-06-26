@@ -57,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::group(['prefix' => 'emergencies'], function () {
         Route::post('/', [\App\Http\Controllers\EmergencyController::class, 'createEmergency']);
+        Route::middleware([\App\Http\Middleware\AllowAdminAndAuthority::class])->group(function () {
+            Route::get('{id}', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
+        });
     });
 
     Route::group(['prefix' => 'emergency_types'], function () {
@@ -82,7 +85,6 @@ Route::middleware('auth:sanctum')->group(function() {
                 Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
                 Route::post('remove_agents', [\App\Http\Controllers\EmergencyController::class, 'removeAgentsFromEmergency']);
                 Route::get('chat_room', [\App\Http\Controllers\EmergencyController::class, 'getChatRoom']);
-                Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergency']);
                 Route::put('/', [\App\Http\Controllers\EmergencyController::class, 'updateEmergency']);
                 Route::delete('/', [\App\Http\Controllers\EmergencyController::class, 'deleteEmergency']);
             });
