@@ -474,7 +474,7 @@ class EmergencyController extends Controller
 
     public function getAgentEmergency(Request $request) {
         $user = Auth::user();
-        if(compareWithEnum($user->type, UserTypeEnum::AGENT)) {
+        if(!compareWithEnum($user->type, UserTypeEnum::AGENT)) {
             return res('User is not an emergency agent', 400);
         }
 
