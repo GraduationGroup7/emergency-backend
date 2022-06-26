@@ -199,7 +199,7 @@ class AuthorityController extends Controller
         $chatRooms = AuthorityAgentChatRoom::query()
             ->select(
                 'authority_agent_chat_rooms.*',
-                DB::raw('CONCAT(agents.first_name, " ", agents.last_name) as agent_name')
+                DB::raw("CONCAT(agents.first_name, '', agents.last_name) as agent_name")
             )
             ->join('agents', 'agent_user_id', '=', 'agents.user_id')
             ->where('authority_user_id', $user->id)
