@@ -167,7 +167,7 @@ class AuthorityController extends Controller
             $user = User::create([
                 'email' => $request->email,
                 'name' => $request->first_name . ' ' . $request->last_name,
-                'password' => $request->password,
+                'password' => bcrypt($request->password),
                 'phone_number' => $request->phone_number,
                 'type' => 'authority'
             ]);
