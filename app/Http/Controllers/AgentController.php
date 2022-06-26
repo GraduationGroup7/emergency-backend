@@ -52,17 +52,25 @@ class AgentController extends Controller
     public function createAgentRoute(Request $request): JsonResponse
     {
         try {
-         $type = AgentType::query()->find($request->agent_type_id);
-         if(!$type)
-         {
-             return res('Agent type not found', 404);
-         }
+             $type = AgentType::query()->where('name', $request->type)->first();
+             if(!$type)
+             {
+                 return res('Agent type not found', 404);
+             }
 
-         $payload = $request->all();
-         $payload['agent_type_id'] = $type->id;
+             $payload = $request->all();
+             $payload['agent_type_id'] = $type->id;
+             $user = User::create([
+                    'email' => $request->email,
+                    'name' => $request->first_name . ' ' . $request->last_name,
+                    'password' => $request->password,
+                    'phone_number' => $request->phone_number,
+                    'type' => 'agent'
+             ]);
+            $payload['user_id'] = $user->id;
 
-         Agent::query()->create($payload);
-         return res('Agent created');
+            Agent::query()->create($payload);
+            return res('Agent created');
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return res('Error creating agent route', 500);

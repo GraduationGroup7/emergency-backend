@@ -17,7 +17,7 @@ class AgentResource extends JsonResource
     public function toArray($request)
     {
         $user = User::find($this->user_id);
-        $type = $this->agent_type_id ? AgentType::query()->find($this->agent_type_id) : null;
+        $type = $this->agent_type_id ? AgentType::query()->find($this->agent_type_id)->name : null;
         return [
             [
                 'title' => 'ID',
