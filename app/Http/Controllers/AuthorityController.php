@@ -196,7 +196,13 @@ class AuthorityController extends Controller
         $authority = Authority::query()->where('user_id', $user->id)->first();
         if(!$authority) return res('Authority not found', 404);
 
-        $chatRooms = AuthorityAgentChatRoom::query()->where('authority_user_id', $user->id)
+        $chatRooms = AuthorityAgentChatRoom::query()
+            ->select(
+                'authority_agent_chat_rooms.*',
+                DB::raw('CONCAT(agents.first_name, " ", agents.last_name) as agent_name')
+            )
+            ->join('agents', 'agent_user_id', '=', 'agents.user_id')
+            ->where('authority_user_id', $user->id)
             ->get()->toArray();
 
         return res($chatRooms);
