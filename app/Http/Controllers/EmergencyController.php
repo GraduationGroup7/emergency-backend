@@ -474,7 +474,6 @@ class EmergencyController extends Controller
 
     public function getAgentEmergency(Request $request) {
         $user = Auth::user();
-        Log::info(json_encode($user));
         if(!compareWithEnum($user->type, UserTypeEnum::AGENT)) {
             return res('User is not an emergency agent', 400);
         }
@@ -486,7 +485,7 @@ class EmergencyController extends Controller
 
        $emergency = EmergencyAgent::query()
             ->select('emergencies.*')
-            ->join('emergency', 'emergency_agent.emergency_id', '=', 'emergency.id')
+            ->join('emergencies', 'emergency_agent.emergency_id', '=', 'emergencies.id')
             ->where('agent_id', $agent->id)
             ->where('emergencies.completed', false)
             ->where('emergencies.is_active', true)
