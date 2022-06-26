@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Forms;
 
+use App\Models\Emergency;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EmergencyResource extends JsonResource
@@ -14,6 +15,13 @@ class EmergencyResource extends JsonResource
      */
     public function toArray($request)
     {
+        $statuses = [Emergency::STATUS_PENDING, Emergency::STATUS_COMPLETED, Emergency::STATUS_ABANDONED];
+        $statuses = array_map(function ($status) {
+            return [
+                'id' => $status,
+                'name' => $status,
+            ];
+        }, $statuses);
         return [
             [
                 'title' => 'ID',
@@ -68,7 +76,8 @@ class EmergencyResource extends JsonResource
                 'title' => 'Status',
                 'field' => 'status',
                 'value' => $this->status,
-                'type' => 'text',
+                'type' => 'select',
+                'options' => $statuses,
                 'disabled' => false,
             ],
 
