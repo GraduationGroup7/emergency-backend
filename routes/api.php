@@ -67,7 +67,12 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['prefix' => 'agents'], function () {
-        Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
+        Route::group(['prefix' => 'chat_rooms'], function () {
+            Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
+            Route::group(['prefix' => 'authority'], function () {
+                Route::post('{id}', [\App\Http\Controllers\AgentController::class, 'sendMessageToAuthority']);
+            });
+        });
     });
 
     Route::group(['prefix' => 'authorities'], function () {

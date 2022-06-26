@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewAuthorityAgentMessage;
+use App\Events\NewChatMessage;
+use App\Events\NewNotification;
 use App\Http\Resources\AgentCollection;
 use App\Http\Resources\AgentResource;
 use App\Models\Agent;
 use App\Models\AgentType;
+use App\Models\AuthorityAgentChatMessage;
 use App\Models\AuthorityAgentChatRoom;
+use App\Models\ChatMessage;
+use App\Models\ChatRoom;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\User;
+use App\Services\ChatRoomService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
@@ -234,5 +241,23 @@ class AgentController extends Controller
             ->where('occupied_agents.agent_id', null);
 
         return new AgentCollection(kaantable($availableAgents, $request));
+    }
+
+    public function sendMessageToAuthority(Request $request, $id): JsonResponse
+    {
+        $user = User::find(Auth::user()->id);
+        $chatRoom = AuthorityAgentChatRoom::find($id);
+
+        if(!$chatRoom) return res('Chat room not found', 404);
+
+        $message = AuthorityAgentChatMessage::create([
+            'authority_agent_chat_room_id' => $chatRoom->id,
+            'user_id' => $user->id,
+            'message' => $request->message,
+        ]);
+
+        broadcast(new NewAuthorityAgentMessage($user, $message))->toOthers();
+
+        return res('Message sent successfully');
     }
 }
