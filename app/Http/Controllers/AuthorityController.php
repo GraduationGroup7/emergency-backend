@@ -175,7 +175,7 @@ class AuthorityController extends Controller
 
             Authority::query()->create($payload);
 
-            DB::beginTransaction();
+            DB::commit();
             return res('Authority created successfully');
         } catch (Exception $exception) {
             DB::rollBack();
