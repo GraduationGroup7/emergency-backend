@@ -6,6 +6,7 @@ use App\Http\Resources\AgentCollection;
 use App\Http\Resources\AgentResource;
 use App\Models\Agent;
 use App\Models\AgentType;
+use App\Models\AuthorityAgentChatRoom;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\User;
@@ -182,7 +183,10 @@ class AgentController extends Controller
             ->where('emergencies.completed', false)
             ->get();
 
-        return res($chat_rooms);
+        $payload = $chat_rooms->toArray();
+        $payload[] = AuthorityAgentChatRoom::query()->where('authority_user_id', $user->id)->get()->toArray();
+
+        return res($payload);
     }
 
     public function deleteAgentById($id) {

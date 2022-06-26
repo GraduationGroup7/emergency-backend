@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewAuthorityAgentMessage;
+use App\Events\NewChatMessage;
+use App\Events\NewNotification;
 use App\Http\Resources\AuthorityCollection;
 use App\Http\Resources\Forms\AuthorityResource;
+use App\Models\Agent;
 use App\Models\Authority;
+use App\Models\AuthorityAgentChatMessage;
+use App\Models\AuthorityAgentChatRoom;
 use App\Models\AuthorityType;
 use App\Models\User;
 use Exception;
@@ -182,5 +188,59 @@ class AuthorityController extends Controller
             Log::info($exception->getMessage());
             return res('Authority could not be created', 400);
         }
+    }
+
+    public function getAuthorityChatRooms(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        $authority = Authority::query()->where('user_id', $user->id)->first();
+        if(!$authority) return res('Authority not found', 404);
+
+        $chatRooms = AuthorityAgentChatRoom::query()->where('authority_user_id', $user->id)
+            ->get()->toArray();
+
+        return res($chatRooms);
+    }
+
+    public function sendMessage(Request $request) {
+        $user = User::find(Auth::user()->id);
+        $authority = Authority::query()->where('user_id', $user->id)->first();
+        if(!$authority) return res('Authority not found', 404);
+
+        $agent = Agent::query()->find($request->agent_id);
+        if(!$agent) return res('Agent not found', 404);
+
+        $chatRoom = AuthorityAgentChatRoom::query()->where('authority_user_id', $user->id)
+            ->where('agent_user_id', $agent->user_id)->first();
+
+        if(!$chatRoom) {
+            $chatRoom = AuthorityAgentChatRoom::query()->create([
+                'authority_user_id' => $user->id,
+                'agent_user_id' => $agent->user_id,
+            ]);
+        }
+
+        $message = AuthorityAgentChatMessage::create([
+            'authority_agent_chat_room_id' => $chatRoom->id,
+            'user_id' => $user->id,
+            'message' => $request->message,
+        ]);
+
+        broadcast(new NewAuthorityAgentMessage($user, $message))->toOthers();
+
+        return res('Message sent successfully');
+    }
+
+    public function getChatMessages(Request $request, $id): JsonResponse
+    {
+        $chatRoom = AuthorityAgentChatRoom::find($id);
+        if(!$chatRoom) return res('Chat room not found', 404);
+
+        $messages = AuthorityAgentChatMessage::query()
+            ->where('authority_agent_chat_room_id', $id)
+            ->orderByDesc('id')
+            ->paginate($request->per_page ?? 25);
+
+        return res($messages);
     }
 }

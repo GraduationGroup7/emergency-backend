@@ -70,6 +70,16 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
     });
 
+    Route::group(['prefix' => 'authorities'], function () {
+        Route::group(['prefix' => 'chat_rooms'], function () {
+            Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getAuthorityChatRooms']);
+            Route::group(['prefix' => '{id}'], function () {
+                Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getChatMessages']);
+            });
+            Route::post('/', [\App\Http\Controllers\AuthorityController::class, 'sendMessage']);
+        });
+    });
+
     // Admin and Authority Accessible Routes
     Route::middleware([\App\Http\Middleware\AllowAdminAndAuthority::class])->group(function () {
         Route::group(['prefix' => 'emergencies'], function () {
