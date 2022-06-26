@@ -381,7 +381,10 @@ class EmergencyController extends Controller
         }
 
         $emergencyTypes = EmergencyType::all();
-        $emergencyAgents = EmergencyAgent::query()->where('emergency_id', $id)->get();
+        $emergencyAgents = EmergencyAgent::query()
+            ->select('agents.*')
+            ->join('agents', 'emergency_agents.agent_id', '=', 'agents.id')
+            ->where('emergency_id', $id)->get();
         $emergencyFiles = EmergencyFile::query()->where('emergency_id', $id)->get();
         $reportingUser = User::query()->find($emergency->reporting_user_id);
         $approvingAuthority = Authority::query()->find($emergency->approving_authority_id);
