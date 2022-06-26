@@ -387,7 +387,7 @@ class EmergencyController extends Controller
         $emergencyTypes = EmergencyType::all();
         $emergencyAgents = EmergencyAgent::query()->where('emergency_id', $id)->get();
         $emergencyFiles = EmergencyFile::query()->where('emergency_id', $id)->get();
-        $reportingCustomer = Customer::query()->find($emergency->reporting_user_id);
+        $reportingUser = User::query()->find($emergency->reporting_user_id);
         $approvingAuthority = Authority::query()->find($emergency->approving_authority_id);
         $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
 
@@ -398,7 +398,7 @@ class EmergencyController extends Controller
             'chat_room' => $chatRoom?->toArray(),
             'emergency_types' => $emergencyTypes->toArray(),
             'available_statuses' => [Emergency::STATUS_PENDING, Emergency::STATUS_ABANDONED, Emergency::STATUS_COMPLETED],
-            'reporting_customer' => $reportingCustomer->toArray(),
+            'reporting_user' => $reportingUser->toArray(),
             'approving_authority' => $approvingAuthority?->toArray(),
         ]);
     }
