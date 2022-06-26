@@ -16,6 +16,7 @@ use App\Models\EmergencyAgent;
 use App\Models\EmergencyFile;
 use App\Models\EmergencyType;
 use App\Models\User;
+use App\Services\S3Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
@@ -218,16 +219,8 @@ class EmergencyController extends Controller
         // Get the file from s3
         $file = 'files/emergency_' . $id . '/' . $filename;
 
-        $fileData = Storage::disk('s3')->get($file);
-
-        $headers = [
-            'Content-Type'        => 'application/octet-stream',
-            'Content-Disposition' => 'attachment; filename=' . $filename,
-        ];
-
-        return response()->stream(function () use ($fileData) {
-            echo $fileData;
-        }, 200, $headers);
+        $s3Service = new S3Service();
+        return $s3Service->getFile($file);
     }
 
     public function getChatRoom(Request $request, $id): JsonResponse
