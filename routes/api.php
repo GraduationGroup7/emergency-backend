@@ -88,6 +88,8 @@ Route::middleware('auth:sanctum')->group(function() {
             });
         });
 
+        Route::get('available-agents', [\App\Http\Controllers\AgentController::class, 'getAvailableAgentsCollection']);
+
         Route::group(['prefix' => 'agents'], function () {
             Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
             Route::get('create_form', [\App\Http\Controllers\AgentController::class, 'getAgentCreateForm']);

@@ -26,6 +26,11 @@ class AdminController extends Controller
             'name' => 'emergencies',
             'model' => 'emergencies',
         ],
+
+        [
+            'name' => 'available-agents',
+            'model' => 'available-agents',
+        ],
     ];
 
     public function getTableRoutes(Request $request): JsonResponse
@@ -36,7 +41,8 @@ class AdminController extends Controller
     public function takeProjectBackup(Request $request): JsonResponse
     {
         try {
-            Artisan::call('backup:run --disable-notifications');
+            Artisan::queue('backup:run', ['--disable-notifications' => true]);
+            Artisan::call('queue:work');
             return res('Backup job has been dispatched');
         } catch (\Exception $exception) {
             return res($exception->getMessage(), 500);

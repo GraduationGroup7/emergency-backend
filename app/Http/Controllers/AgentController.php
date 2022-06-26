@@ -172,4 +172,26 @@ class AgentController extends Controller
             return res('Agents could not be deleted', 400);
         }
     }
+
+    public function getAvailableAgentsCollection(Request $request) {
+        $occupiedAgents = Emergency::query()
+            ->select('ea.agent_id as agent_id')
+            ->join('emergency_agents as ea', 'ea.emergency_id', '=', 'emergencies.id')
+            ->where('completed', false);
+
+        $availableAgents = Agent::query()
+            ->select(
+                'agents.*',
+                'agent_types.name as agent_type_name',
+                'users.phone_number as phone_number'
+            )
+            ->leftJoinSub($occupiedAgents, 'occupied_agents', function ($join) {
+                $join->on('agents.id', '=', 'occupied_agents.agent_id');
+            })
+            ->join('agent_types', 'agents.agent_type_id', '=', 'agent_types.id')
+            ->join('users', 'agents.user_id', '=', 'users.id')
+            ->where('occupied_agents.agent_id', null);
+
+        return new AgentCollection(kaantable($availableAgents, $request));
+    }
 }
