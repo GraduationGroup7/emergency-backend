@@ -81,7 +81,8 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::group(['prefix' => '{id}'], function () {
                 Route::get('/', [\App\Http\Controllers\AuthorityController::class, 'getChatMessages']);
             });
-            Route::post('/', [\App\Http\Controllers\AuthorityController::class, 'sendMessage']);
+            Route::post('/', [\App\Http\Controllers\AuthorityController::class, 'openChatRoom']);
+            Route::post('message', [\App\Http\Controllers\AuthorityController::class, 'sendMessage']);
         });
     });
 
