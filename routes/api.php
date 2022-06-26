@@ -102,7 +102,7 @@ Route::middleware('auth:sanctum')->group(function() {
             });
 
             Route::get('/', [\App\Http\Controllers\AgentController::class, 'getAgents']);
-            Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgent']);
+            Route::post('/', [\App\Http\Controllers\AgentController::class, 'createAgentRoute']);
         });
     });
 

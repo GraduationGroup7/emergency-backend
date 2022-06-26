@@ -48,6 +48,17 @@ class AgentController extends Controller
         return res($agent);
     }
 
+    public function createAgentRoute(Request $request): JsonResponse
+    {
+        try {
+         AgentController::createAgent($request->all());
+         return res('Agent created');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return res('Error creating agent route', 500);
+        }
+    }
+
     /**
      * @throws Exception
      */
