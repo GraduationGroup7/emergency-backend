@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\UserTypeEnum;
 use App\Events\NewNotification;
 use App\Http\Resources\EmergencyCollection;
 use App\Http\Resources\Forms\EmergencyResource;
@@ -469,5 +470,27 @@ class EmergencyController extends Controller
     {
         $emergencyTypes = EmergencyType::query()->where('name', '!=', 'Test')->get()->toArray();
         return res($emergencyTypes);
+    }
+
+    public function getAgentEmergency(Request $request) {
+        $user = Auth::user();
+        if(compareWithEnum($user->type, UserTypeEnum::AGENT)) {
+            return res('User is not an emergency agent', 400);
+        }
+
+        $agent = Agent::query()->where('user_id', $user->id)->first();
+        if(!$agent) {
+            return res('Agent not found', 404);
+        }
+
+       $emergency = EmergencyAgent::query()
+            ->select('emergencies.*')
+            ->join('emergency', 'emergency_agent.emergency_id', '=', 'emergency.id')
+            ->where('agent_id', $agent->id)
+            ->where('emergencies.completed', false)
+            ->where('emergencies.is_active', true)
+            ->first();
+
+        return res($emergency);
     }
 }
