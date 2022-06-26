@@ -87,7 +87,7 @@ class EmergencyController extends Controller
             DB::beginTransaction();
             // Create the emergency
             $payload = array_merge($request->all(), [
-                'reporting_customer_id' => $customer->id,
+                'reporting_user_id' => $customer->id,
             ]);
 
             $emergency = Emergency::query()->create($payload);
@@ -293,7 +293,7 @@ class EmergencyController extends Controller
                 'description' => implode('\n', $descriptions),
                 'latitude' => $mainEmergency->latitude,
                 'longitude' => $mainEmergency->longitude,
-                'reporting_customer_id' => $mainEmergency->reporting_customer_id,
+                'reporting_user_id' => $mainEmergency->reporting_user_id,
                 'emergency_type_id' => $mainEmergency->emergency_type_id,
             ]);
 
@@ -329,7 +329,7 @@ class EmergencyController extends Controller
                 'chat_rooms.id as chat_room_id'
             )
             ->join('chat_rooms', 'emergencies.id', '=', 'chat_rooms.emergency_id')
-            ->where('reporting_customer_id', $customer->id)
+            ->where('reporting_user_id', $customer->id)
             ->where('completed', false)
             ->where('is_active', true)
             ->get();
@@ -395,7 +395,7 @@ class EmergencyController extends Controller
         $emergencyTypes = EmergencyType::all();
         $emergencyAgents = EmergencyAgent::query()->where('emergency_id', $id)->get();
         $emergencyFiles = EmergencyFile::query()->where('emergency_id', $id)->get();
-        $reportingCustomer = Customer::query()->find($emergency->reporting_customer_id);
+        $reportingCustomer = Customer::query()->find($emergency->reporting_user_id);
         $approvingAuthority = Authority::query()->find($emergency->approving_authority_id);
         $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
 

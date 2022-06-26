@@ -16,7 +16,7 @@ class EmergencyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'reporting_customer_id' => $this->reporting_customer_id,
+            'reporting_user_id' => $this->reporting_user_id,
             'approving_authority_id' => $this->approving_authority_id,
             'completed' => $this->completed,
             'latitude' => $this->latitude,

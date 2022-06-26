@@ -15,7 +15,7 @@ class ChatRoomService
         $emergency = Emergency::query()->find($chatRoom->emergency_id);
         if(compareWithEnum($user->type, UserTypeEnum::USER)) {
             $customer = $user->getCustomer();
-            if(!$customer || $customer->id != $emergency->reporting_customer_id) return false;
+            if(!$customer || $customer->id != $emergency->reporting_user_id) return false;
         }
         else {
             $agent = $user->getAgent();
