@@ -137,6 +137,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
         Route::group(['prefix' => 'admin'], function () {
             Route::get('tables', [\App\Http\Controllers\AdminController::class, 'getTableRoutes']);
+            Route::post('backup', [\App\Http\Controllers\AdminController::class, 'takeProjectBackup']);
         });
     });
 });

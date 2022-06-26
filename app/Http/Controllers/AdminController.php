@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -30,5 +31,15 @@ class AdminController extends Controller
     public function getTableRoutes(Request $request): JsonResponse
     {
         return res(self::TABLE_ROUTES);
+    }
+
+    public function takeProjectBackup(Request $request): JsonResponse
+    {
+        try {
+            Artisan::call('backup:run --disable-notifications');
+            return res('Backup job has been dispatched');
+        } catch (\Exception $exception) {
+            return res($exception->getMessage(), 500);
+        }
     }
 }
