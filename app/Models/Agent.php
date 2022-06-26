@@ -11,6 +11,7 @@ class Agent extends Model
         'user_id',
         'first_name',
         'last_name',
+        'agent_type_id'
     ];
     use HasFactory;
 }
