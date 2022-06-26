@@ -485,8 +485,9 @@ class EmergencyController extends Controller
         }
 
        $emergency = EmergencyAgent::query()
-            ->select('emergencies.*')
+            ->select('emergencies.*', 'users.name', 'users.phone_number')
             ->join('emergencies', 'emergency_agents.emergency_id', '=', 'emergencies.id')
+            ->join('users', 'emergencies.reporting_user_id', '=', 'users.id')
             ->where('agent_id', $agent->id)
             ->where('emergencies.completed', false)
             ->where('emergencies.is_active', true)
