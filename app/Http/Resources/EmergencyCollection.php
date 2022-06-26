@@ -36,6 +36,10 @@ class EmergencyCollection extends ResourceCollection
                     'field' => 'emergency_type'
                 ],
                 [
+                    'headerName' => 'Completed',
+                    'field' => 'completed'
+                ],
+                [
                     'headerName' => 'Reported At',
                     'field' => 'created_at'
                 ],
