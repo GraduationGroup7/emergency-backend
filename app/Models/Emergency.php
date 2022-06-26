@@ -18,6 +18,7 @@ class Emergency extends Model
         'country',
         'city',
         'is_active',
+        'status'
     ];
 
     const STATUS_PENDING = "pending";
