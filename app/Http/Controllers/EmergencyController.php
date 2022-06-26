@@ -33,6 +33,7 @@ class EmergencyController extends Controller
         $user = User::find(Auth::user()->id);
 
         $emergencies = Emergency::query()
+            ->select('emergencies.*')
             ->join('emergency_types', 'emergencies.emergency_type_id', '=', 'emergency_types.id')
             ->where(function ($query) use ($user) {
                 if($user->type === 'authority') {
