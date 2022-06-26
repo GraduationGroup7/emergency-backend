@@ -539,4 +539,23 @@ class EmergencyController extends Controller
 
         return res($notes);
     }
+
+    public function getMergeableEmergencies(Request $request, $id): EmergencyCollection
+    {
+        $user = User::find(Auth::user()->id);
+
+        $emergencies = Emergency::query()
+            ->select('emergencies.*', 'emergency_types.name as emergency_type')
+            ->join('emergency_types', 'emergencies.emergency_type_id', '=', 'emergency_types.id')
+            ->where('emergencies.id', '!=', $id)
+            ->where(function ($query) use ($user) {
+                if($user->type === 'authority') {
+                    $authority = Authority::query()->where('user_id', $user->id)->first();
+                    $authorityType = AuthorityType::find($authority->authority_type_id);
+                    $query->where('emergency_types.name', $authorityType->name);
+                }
+            });
+
+        return new EmergencyCollection(kaantable($emergencies, $request));
+    }
 }

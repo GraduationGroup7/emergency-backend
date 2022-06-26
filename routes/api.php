@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencies']);
 
             Route::group(['prefix' => '{id}'], function () {
+                Route::get('merge-able', [\App\Http\Controllers\EmergencyController::class, 'getMergeableEmergencies']);
                 Route::get('all', [\App\Http\Controllers\EmergencyController::class, 'getAllEmergencyData']);
                 Route::get('form', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyForm']);
                 Route::post('assign_agents', [\App\Http\Controllers\EmergencyController::class, 'assignAgentsToEmergency']);
