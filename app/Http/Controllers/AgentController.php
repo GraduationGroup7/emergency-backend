@@ -51,6 +51,7 @@ class AgentController extends Controller
 
     public function createAgentRoute(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
              $type = AgentType::query()->find($request->type)->first();
              if(!$type)
@@ -70,8 +71,11 @@ class AgentController extends Controller
             $payload['user_id'] = $user->id;
 
             Agent::query()->create($payload);
+            DB::commit();
+
             return res('Agent created');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
             return res('Error creating agent route', 500);
         }
