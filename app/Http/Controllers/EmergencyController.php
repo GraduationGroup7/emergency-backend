@@ -492,7 +492,12 @@ class EmergencyController extends Controller
             ->first();
 
         $payload = $emergency->toArray();
-        $payload['files'] = EmergencyFile::query()->where('emergency_id', $payload['id'])->get()->toArray();
+        $payload['files'] = EmergencyFile::query()
+            ->select(
+                'name',
+                DB::raw('CONCAT("emergencies/", emergency_id, "/get_file/", name) as url')
+            )
+            ->where('emergency_id', $payload['id'])->get()->toArray();
 
         return res($payload);
     }
