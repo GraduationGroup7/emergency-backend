@@ -15,6 +15,7 @@ use App\Models\Customer;
 use App\Models\Emergency;
 use App\Models\EmergencyAgent;
 use App\Models\EmergencyFile;
+use App\Models\EmergencyNote;
 use App\Models\EmergencyType;
 use App\Models\User;
 use App\Services\S3Service;
@@ -501,8 +502,35 @@ class EmergencyController extends Controller
                 )
                 ->where('emergency_id', $payload['id'])->get()->toArray();
 
+            $payload['notes'] = EmergencyNote::query()->where('emergency_id', $payload['id'])->get()->toArray();
         }
 
         return res($payload);
+    }
+
+    public function getEmergencyNotes(Request $request, $id): JsonResponse
+    {
+        $emergency = Emergency::query()->find($id);
+        if (!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        $notes = EmergencyNote::query()->where('emergency_id', $id)->get()->toArray();
+        return res($notes);
+    }
+    public function postEmergencyNote(Request $request, $id): JsonResponse
+    {
+        $emergency = Emergency::query()->find($id);
+        if (!$emergency) {
+            return res('Emergency not found', 404);
+        }
+
+        $notes = EmergencyNote::query()->create([
+            'emergency_id' => $id,
+            'user_id' => Auth::user()->id,
+            'note' => $request->note,
+        ]);
+
+        return res($notes);
     }
 }
