@@ -491,6 +491,9 @@ class EmergencyController extends Controller
             ->where('emergencies.is_active', true)
             ->first();
 
-        return res($emergency);
+        $payload = $emergency->toArray();
+        $payload['files'] = EmergencyFile::query()->where('emergency_id', $payload['id'])->get()->toArray();
+
+        return res($payload);
     }
 }
