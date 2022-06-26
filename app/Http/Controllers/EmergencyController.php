@@ -321,15 +321,13 @@ class EmergencyController extends Controller
             return res('User not found', 404);
         }
 
-        $customer = Customer::query()->where('user_id', $user->id)->first();
-
         $emergencies = Emergency::query()
             ->select(
                 'emergencies.*',
                 'chat_rooms.id as chat_room_id'
             )
             ->join('chat_rooms', 'emergencies.id', '=', 'chat_rooms.emergency_id')
-            ->where('reporting_user_id', $customer->id)
+            ->where('reporting_user_id', $user->id)
             ->where('completed', false)
             ->where('is_active', true)
             ->get();

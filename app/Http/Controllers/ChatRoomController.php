@@ -93,8 +93,7 @@ class ChatRoomController extends Controller
     {
         $emergency = Emergency::query()->find($chatRoom->emergency_id);
         if(compareWithEnum($user->type, UserTypeEnum::USER)) {
-            $customer = $user->getCustomer();
-            if(!$customer || $customer->user_id != $emergency->reporting_user_id) return false;
+            if($user->user_id != $emergency->reporting_user_id) return false;
         }
         else {
             $agent = $user->getAgent();
