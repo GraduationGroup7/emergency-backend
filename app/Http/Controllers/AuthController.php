@@ -242,7 +242,7 @@ class AuthController extends Controller
             $basic  = new \Vonage\Client\Credentials\Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
             $client = new \Vonage\Client(new \Vonage\Client\Credentials\Container($basic));
 
-            $phone_request = new \Vonage\Verify\Request($request->phone_number, "Emergency");
+            $phone_request = new \Vonage\Verify\Request($user->phone_number, "Emergency");
             $response = $client->verify()->start($phone_request);
 
             return res([
