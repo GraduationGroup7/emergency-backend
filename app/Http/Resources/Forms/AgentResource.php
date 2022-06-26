@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Forms;
 
+use App\Models\Agent;
 use App\Models\AgentType;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,7 +18,7 @@ class AgentResource extends JsonResource
     public function toArray($request)
     {
         $user = User::find($this->user_id);
-        $type = $this->agent_type_id ? AgentType::query()->find($this->agent_type_id)->name : null;
+        $type = $this->agent_type_id ? AgentType::query()->find($this->agent_type_id)->name : AgentType::query()->first()->id;
         $types = AgentType::query()->select('id', 'name')->get()->toArray();
         return [
             [
