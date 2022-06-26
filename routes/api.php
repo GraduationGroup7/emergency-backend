@@ -63,6 +63,10 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/', [\App\Http\Controllers\EmergencyController::class, 'getEmergencyTypes']);
     });
 
+    Route::group(['prefix' => 'agents'], function () {
+        Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
+    });
+
     // Admin and Authority Accessible Routes
     Route::middleware([\App\Http\Middleware\AllowAdminAndAuthority::class])->group(function () {
         Route::group(['prefix' => 'emergencies'], function () {
@@ -87,7 +91,6 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['prefix' => 'agents'], function () {
             Route::get('available', [\App\Http\Controllers\AgentController::class, 'getAvailableAgents']);
             Route::get('create_form', [\App\Http\Controllers\AgentController::class, 'getAgentCreateForm']);
-            Route::get('chat_rooms', [\App\Http\Controllers\AgentController::class, 'getAgentChatRooms']);
             Route::post('bulk_delete', [\App\Http\Controllers\AgentController::class, 'bulkDeleteAgents']);
             Route::group(['prefix' => '{id}'], function () {
                 Route::get('form', [\App\Http\Controllers\AgentController::class, 'getAgentForm']);

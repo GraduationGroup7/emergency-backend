@@ -129,9 +129,10 @@ class AgentController extends Controller
 
     public function getAgentChatRooms(Request $request): JsonResponse
     {
-        Log::info('user id ' . Auth::user()->id);
-        $agent = Agent::where('user_id', Auth::user()->id)->first();
-        Log::info('AGENT ' . json_encode($agent));
+        $user = Auth::user();
+        if($user->type != 'agent') return res('Unauthorized', 401);
+
+        $agent = Agent::where('user_id', $user->id)->first();
         if(!$agent) {
             return res('Agent not found', 404);
         }
