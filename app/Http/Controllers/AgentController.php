@@ -52,7 +52,7 @@ class AgentController extends Controller
     public function createAgentRoute(Request $request): JsonResponse
     {
         try {
-             $type = AgentType::query()->where('name', $request->type)->first();
+             $type = AgentType::query()->find($request->type)->first();
              if(!$type)
              {
                  return res('Agent type not found', 404);
