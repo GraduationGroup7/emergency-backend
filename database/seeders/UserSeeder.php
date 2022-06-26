@@ -82,5 +82,42 @@ class UserSeeder extends Seeder
             'authority_type_id' => 1,
             'user_id' => $user->id
         ]);
+
+
+        // Agent2
+        $user = User::query()->updateOrCreate([
+            'email' => 'bashar@agent.com',
+        ],[
+            'name' => 'Bashar Agent',
+            'email' => 'bashar@agent.com',
+            'password' => Hash::make('123123'),
+            'type' => 'agent'
+        ]);
+        Agent::query()->updateOrCreate([
+            'user_id' => $user->id
+        ],[
+            'first_name' => 'Bashar',
+            'last_name' => 'Agent',
+            'agent_type_id' => 1,
+            'user_id' => $user->id
+        ]);
+
+        // Agent3
+        $user = User::query()->updateOrCreate([
+            'email' => 'Danish@agent.com',
+        ],[
+            'name' => 'Danish Agent',
+            'email' => 'dasish@agent.com',
+            'password' => Hash::make('123123'),
+            'type' => 'agent'
+        ]);
+        Agent::query()->updateOrCreate([
+            'user_id' => $user->id
+        ],[
+            'first_name' => 'Danish',
+            'last_name' => 'Agent',
+            'agent_type_id' => 1,
+            'user_id' => $user->id
+        ]);
     }
 }
