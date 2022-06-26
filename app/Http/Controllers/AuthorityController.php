@@ -17,7 +17,11 @@ class AuthorityController extends Controller
 {
     public function getAuthorities(Request $request): AuthorityCollection
     {
-        return new AuthorityCollection(kaantable(Authority::query(), $request));
+        $authorities = Authority::query()
+            ->select('authorities.*', 'authority_types.name as type')
+            ->join('authority_types', 'authority_types.id', '=', 'authorities.authority_type_id');
+
+        return new AuthorityCollection(kaantable($authorities, $request));
     }
 
     public function getAuthority(int $id): JsonResponse
