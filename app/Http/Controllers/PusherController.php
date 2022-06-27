@@ -30,7 +30,7 @@ class PusherController extends Controller
 
         try {
             $chatRoomService = new ChatRoomService();
-            if(!$chatRoomService->checkIfAuthorized($user, $chatRoom)) {
+            if($user->type !== 'authority' && !$chatRoomService->checkIfAuthorized($user, $chatRoom)) {
                 return res('Unauthorized', 403);
             }
 
