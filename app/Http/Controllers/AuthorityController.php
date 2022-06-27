@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewAuthorityAgentMessage;
+use App\Events\NewNotification;
 use App\Http\Resources\AuthorityCollection;
 use App\Http\Resources\Forms\AuthorityResource;
 use App\Models\Agent;
@@ -225,6 +226,8 @@ class AuthorityController extends Controller
         Log::info('MESSAGE ' . json_encode($message));
 
         broadcast(new NewAuthorityAgentMessage($user, $message))->toOthers();
+        $notifyUser = User::find($chatRoom->agent_user_id);
+        event(new NewNotification($notifyUser, ['payload' => ['message' => $request->message, 'user' => $user], 'type' => 'chatroom-message', 'title' => 'New Chatroom Message' ]));
 
         return res('Message sent successfully');
     }

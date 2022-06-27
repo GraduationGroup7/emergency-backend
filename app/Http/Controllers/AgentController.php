@@ -263,6 +263,8 @@ class AgentController extends Controller
         ]);
 
         broadcast(new NewAuthorityAgentMessage($user, $message))->toOthers();
+        $notifyUser = User::find($chatRoom->authority_user_id);
+        event(new NewNotification($notifyUser, ['payload' => ['message' => $request->message, 'user' => $user], 'type' => 'chatroom-message', 'title' => 'New Chatroom Message' ]));
 
         return res('Message sent successfully');
     }
