@@ -22,6 +22,22 @@ class PusherController extends Controller
         }
 
         $channelId = explode('.', $request->channel_name)[1];
+
+        try {
+            if(explode('.', $request->channel_name)[0] === 'private-agent-chat') {
+                $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
+                $authData = json_decode($pusher->socketAuth($request->channel_name, $request->socket_id), true)['auth'];
+
+                return response(json_encode([
+                    'auth' => $authData,
+                    'user_info' => $user->toArray(),
+                ]), 200);
+            }
+        } catch (\Exception $exception) {
+            Log::info($exception->getMessage());
+            return res('Unauthorized authority agent chat', 403);
+        }
+
         $chatRoom = ChatRoom::find($channelId);
 
         if(!$chatRoom) {
