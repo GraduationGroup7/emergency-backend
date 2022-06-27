@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewAuthorityAgentMessage;
-use App\Events\NewChatMessage;
-use App\Events\NewNotification;
 use App\Http\Resources\AuthorityCollection;
 use App\Http\Resources\Forms\AuthorityResource;
 use App\Models\Agent;
@@ -208,10 +206,9 @@ class AuthorityController extends Controller
         return res($chatRooms);
     }
 
-    public function sendMessage(Request $request, $id) {
+    public function sendMessage(Request $request, $id): JsonResponse
+    {
         $user = User::find(Auth::user()->id);
-//        $authority = Authority::query()->where('user_id', $user->id)->first();
-//        if(!$authority) return res('Authority not found', 404);
 
         $chatRoom = AuthorityAgentChatRoom::query()->find($id);
 
