@@ -210,8 +210,8 @@ class AuthorityController extends Controller
 
     public function sendMessage(Request $request, $id) {
         $user = User::find(Auth::user()->id);
-        $authority = Authority::query()->where('user_id', $user->id)->first();
-        if(!$authority) return res('Authority not found', 404);
+//        $authority = Authority::query()->where('user_id', $user->id)->first();
+//        if(!$authority) return res('Authority not found', 404);
 
         $chatRoom = AuthorityAgentChatRoom::query()->find($id);
 
