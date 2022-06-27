@@ -24,7 +24,5 @@ Broadcast::channel('private-chat.{roomId}', function ($user, $roomId) {
 });
 
 Broadcast::channel('private-agent_chat.{roomId}', function ($user, $roomId) {
-    if(\Illuminate\Support\Facades\Auth::check()) {
-        return ['id' => $user->id, 'name' => $user->name];
-    }
+    return true;
 });
