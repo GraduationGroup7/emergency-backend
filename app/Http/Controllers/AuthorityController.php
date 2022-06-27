@@ -208,22 +208,15 @@ class AuthorityController extends Controller
         return res($chatRooms);
     }
 
-    public function sendMessage(Request $request) {
+    public function sendMessage(Request $request, $id) {
         $user = User::find(Auth::user()->id);
         $authority = Authority::query()->where('user_id', $user->id)->first();
         if(!$authority) return res('Authority not found', 404);
 
-        $agent = Agent::query()->find($request->agent_id);
-        if(!$agent) return res('Agent not found', 404);
-
-        $chatRoom = AuthorityAgentChatRoom::query()->where('authority_user_id', $user->id)
-            ->where('agent_user_id', $agent->user_id)->first();
+        $chatRoom = AuthorityAgentChatRoom::query()->find($id);
 
         if(!$chatRoom) {
-            $chatRoom = AuthorityAgentChatRoom::query()->create([
-                'authority_user_id' => $user->id,
-                'agent_user_id' => $agent->user_id,
-            ]);
+            return res('Chat room not found', 404);
         }
 
         $message = AuthorityAgentChatMessage::create([
