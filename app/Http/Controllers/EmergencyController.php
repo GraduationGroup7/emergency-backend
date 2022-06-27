@@ -565,6 +565,7 @@ class EmergencyController extends Controller
             ->select('emergencies.*', 'emergency_types.name as emergency_type')
             ->join('emergency_types', 'emergencies.emergency_type_id', '=', 'emergency_types.id')
             ->where('emergencies.id', '!=', $id)
+            ->where('emergencies.is_active', true)
             ->where(function ($query) use ($user) {
                 if($user->type === 'authority') {
                     $authority = Authority::query()->where('user_id', $user->id)->first();
