@@ -32,11 +32,10 @@ class NewAuthorityAgentMessage
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return Channel|array
+     * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function broadcastOn(): array|Channel
+    public function broadcastOn()
     {
-        Log::info('HERE ' . json_encode($this->chatMessage));
         return ['private-agent-chat.' . $this->chatMessage->authority_agent_chat_room_id];
     }
 
