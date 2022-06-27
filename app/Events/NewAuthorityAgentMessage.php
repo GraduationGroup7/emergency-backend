@@ -5,6 +5,7 @@ namespace App\Events;
 use App\Models\AuthorityAgentChatMessage;
 use App\Models\ChatMessage;
 use App\Models\User;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -31,9 +32,9 @@ class NewAuthorityAgentMessage
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
-    public function broadcastOn()
+    public function broadcastOn(): array|Channel
     {
         Log::info('HERE ' . json_encode($this->chatMessage));
         return ['private-agent-chat.' . $this->chatMessage->authority_agent_chat_room_id];
