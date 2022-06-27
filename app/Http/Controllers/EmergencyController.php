@@ -392,7 +392,11 @@ class EmergencyController extends Controller
             ->join('agents', 'emergency_agents.agent_id', '=', 'agents.id')
             ->join('agent_types', 'agents.agent_type_id', '=', 'agent_types.id')
             ->where('emergency_id', $id)->get();
-        $emergencyFiles = EmergencyFile::query()->where('emergency_id', $id)->get();
+        $emergencyFiles = EmergencyFile::query()
+            ->select('emergency_files.*',
+                DB::raw("CONCAT('emergencies/', emergency_id, '/get_file/', name) as url")
+            )
+            ->where('emergency_id', $id)->get();
         $reportingUser = User::query()->find($emergency->reporting_user_id);
         $approvingAuthority = Authority::query()->find($emergency->approving_authority_id);
         $chatRoom = ChatRoom::query()->where('emergency_id', $id)->first();
