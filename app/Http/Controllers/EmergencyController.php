@@ -173,7 +173,9 @@ class EmergencyController extends Controller
         }
 
 
-        return res('Agent(s) assigned to emergency');
+        return res(EmergencyAgent::query()->where(
+            'emergency_id', $emergency->id,
+        )->get()->toArray());
     }
 
     public function removeAgentsFromEmergency(Request $request, int $id): JsonResponse
