@@ -271,6 +271,8 @@ class EmergencyController extends Controller
 
             $descriptions = [];
             $files = [];
+            $files = array_merge($files, EmergencyFile::query()->where('emergency_id', $mainEmergency->id)->get()->toArray());
+
             foreach ($emergencyIds as $emergencyId) {
                 $emergency = Emergency::find($emergencyId);
                 if(!$emergency) {
@@ -304,7 +306,7 @@ class EmergencyController extends Controller
             }
 
             DB::commit();
-            return res('Emergencies merged');
+            return res($emergency);
         } catch (Exception $exception) {
             DB::rollBack();
             return res($exception->getMessage(), 500);
