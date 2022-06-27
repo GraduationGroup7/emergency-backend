@@ -236,6 +236,8 @@ class AuthorityController extends Controller
         if(!$chatRoom) return res('Chat room not found', 404);
 
         $messages = AuthorityAgentChatMessage::query()
+            ->select('authority_agent_chat_messages.*', 'user.name as user_name')
+            ->join('users', 'authority_agent_chat_messages.user_id', '=', 'users.id')
             ->where('authority_agent_chat_room_id', $id)
             ->orderByDesc('id')
             ->paginate($request->per_page ?? 25);
