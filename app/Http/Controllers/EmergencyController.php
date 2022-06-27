@@ -270,6 +270,9 @@ class EmergencyController extends Controller
         try {
             DB::beginTransaction();
 
+            $mainEmergency->is_active = false;
+            $mainEmergency->save();
+
             $descriptions = [];
             $files = [];
             $files = array_merge($files, EmergencyFile::query()->where('emergency_id', $mainEmergency->id)->get()->toArray());
