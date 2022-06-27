@@ -192,10 +192,10 @@ class AgentController extends Controller
             ->get();
 
         $payload = $chat_rooms->toArray();
-        $payload[] = AuthorityAgentChatRoom::query()
+        $payload = array_merge($payload, AuthorityAgentChatRoom::query()
             ->select('authority_agent_chat_rooms.*', 'authority_agent_chat_rooms.id as chat_room_id',
             DB::raw("'agent_chat' as chat_room_type"))
-            ->where('agent_user_id', $user->id)->get()->toArray();
+            ->where('agent_user_id', $user->id)->get()->toArray());
 
         return res($payload);
     }
