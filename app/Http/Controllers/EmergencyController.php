@@ -394,7 +394,7 @@ class EmergencyController extends Controller
             ->where('emergency_id', $id)->get();
         $emergencyFiles = EmergencyFile::query()
             ->select('emergency_files.*',
-                DB::raw("CONCAT('emergencies/', emergency_id, '/get_file/', name) as url")
+                DB::raw("CONCAT('emergencies/', emergency_id, '/get_file/', name) as fileName")
             )
             ->where('emergency_id', $id)->get();
         $reportingUser = User::query()->find($emergency->reporting_user_id);
