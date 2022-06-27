@@ -23,6 +23,6 @@ Broadcast::channel('private-chat.{roomId}', function ($user, $roomId) {
     }
 });
 
-Broadcast::channel('private-agent_chat.{roomId}', function ($user, $roomId) {
+Broadcast::channel('private-agent-chat.{roomId}', function ($user, $roomId) {
     return true;
 });
