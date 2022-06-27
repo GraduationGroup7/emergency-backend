@@ -37,7 +37,7 @@ class NewAuthorityAgentMessage
     public function broadcastOn(): array|Channel
     {
         Log::info('HERE ' . json_encode($this->chatMessage));
-        return ['private-agent-chat.' . $this->chatMessage->authority_agent_chat_room_id];
+        return [new Channel('private-agent-chat.' . $this->chatMessage->authority_agent_chat_room_id)];
     }
 
     /**
