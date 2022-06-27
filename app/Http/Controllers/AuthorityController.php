@@ -227,7 +227,7 @@ class AuthorityController extends Controller
 
         Log::info('MESSAGE ' . json_encode($message));
 
-        broadcast(new NewAuthorityAgentMessage($user, $message))->toOthers();
+        event(new NewAuthorityAgentMessage($user, $message));
 
         return res('Message sent successfully');
     }
