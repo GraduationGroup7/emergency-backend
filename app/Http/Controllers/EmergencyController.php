@@ -108,6 +108,7 @@ class EmergencyController extends Controller
                     'name' => $file->getClientOriginalName(),
                     'type' => $file->extension(),
                     'url' => Storage::disk('s3')->url($path),
+                    's3_url' => 'emergencies/' . $emergency->id . '/get_file/' . $file->getClientOriginalName(),
                 ]);
             }
             DB::commit();
@@ -302,6 +303,7 @@ class EmergencyController extends Controller
                     'name' => $file['name'],
                     'type' => $file['type'],
                     'url' => $file['url'],
+                    's3_url' => $file['s3_url'],
                 ]);
             }
 
