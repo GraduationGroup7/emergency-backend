@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class NewAuthorityAgentMessage
 {
@@ -34,6 +35,7 @@ class NewAuthorityAgentMessage
      */
     public function broadcastOn()
     {
+        Log::info('HERE ' . json_encode($this->chatMessage));
         return ['private-agent-chat.' . $this->chatMessage->authority_agent_chat_room_id];
     }
 
